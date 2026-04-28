@@ -9,3 +9,6 @@ secrets.*
 .DS_Store
 .codex
 outputs/
+AGENTS.md
+Agents.md
+process.md
