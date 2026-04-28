@@ -1,0 +1,11 @@
+{
+  "name": "tekazure-image-lab",
+  "version": "1.0.0",
+  "description": "Azure OpenAI image endpoint app with mock fallback",
+  "type": "module",
+  "main": "src/server.js",
+  "scripts": {
+    "start": "node src/server.js"
+  },
+  "license": "MIT"
+}
