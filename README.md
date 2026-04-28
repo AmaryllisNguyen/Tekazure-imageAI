@@ -57,12 +57,3 @@ Server log se giu chi tiet ky thuat (da redact thong tin nhay cam), client chi n
   - `git status`
   - `git diff --staged`
 de dam bao khong lo du lieu nhay cam.
-
-## GitHub steps
-
-1. Dang nhap GH CLI:
-   - `gh auth login -h github.com`
-2. Tao repo:
-   - `gh repo create tekazure-image-lab --private --source=. --remote=origin --push`
-3. Moi collaborator:
-   - `gh repo add-collaborator <owner>/tekazure-image-lab --user TimLuong --permission write`
