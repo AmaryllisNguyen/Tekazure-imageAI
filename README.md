@@ -37,12 +37,23 @@ Dat trong `.env`:
 - `DEPLOYMENT_GPT_IMAGE_15`
 - `DEPLOYMENT_GPT_IMAGE_2`
 - `AZURE_OPENAI_API_VERSION` (mac dinh: `2025-04-01-preview`)
+- `AZURE_REQUEST_TIMEOUT_MS` (mac dinh: `15000`)
+- `MAX_BODY_BYTES` (mac dinh: `1048576`)
 
-## GitHub steps
+## Error contract (safe response)
 
-1. Dang nhap GH CLI:
-   - `gh auth login -h github.com`
-2. Tao repo:
-   - `gh repo create tekazure-image-lab --private --source=. --remote=origin --push`
-3. Moi collaborator:
-   - `gh repo add-collaborator <owner>/tekazure-image-lab --user TimLuong --permission write`
+API `POST /generate-image` tra loi an toan theo ma:
+- `400`: request JSON sai format hoac input sai (`prompt`, `model`)
+- `413`: payload qua lon
+- `502`: loi hoac timeout tu Azure image provider
+- `500`: loi server noi bo
+
+Server log se giu chi tiet ky thuat (da redact thong tin nhay cam), client chi nhan message tong quat.
+
+## Git safety
+
+- `RawDocuments/*` duoc ignore mac dinh, chi giu `RawDocuments/.gitkeep`.
+- Truoc moi lan push, chay:
+  - `git status`
+  - `git diff --staged`
+de dam bao khong lo du lieu nhay cam.

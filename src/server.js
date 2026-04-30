@@ -2,29 +2,93 @@ import http from "node:http";
 import { getConfig } from "./config.js";
 import { generateAzureImage } from "./azureImageClient.js";
 import { generateMockImage } from "./mockImageProvider.js";
+import { ApiError, createApiError } from "./errors.js";
 
 function sendJson(res, status, payload) {
   res.writeHead(status, { "Content-Type": "application/json; charset=utf-8" });
   res.end(JSON.stringify(payload));
 }
 
-async function readJsonBody(req) {
+function redactSensitive(input) {
+  const message = String(input || "");
+  return message
+    .replace(/(api[-_ ]?key|token|authorization)\s*[:=]\s*([^\s,]+)/gi, "$1=[REDACTED]")
+    .replace(/(Bearer)\s+[A-Za-z0-9._-]+/gi, "$1 [REDACTED]");
+}
+
+function logInternalError(error) {
+  const details = {
+    name: error?.name || "Error",
+    code: error?.code || "UNKNOWN",
+    status: error?.status || 500,
+    message: redactSensitive(error?.internalMessage || error?.message || "unknown error")
+  };
+  console.error("[request-error]", details);
+}
+
+function getPublicErrorPayload(error) {
+  if (error instanceof ApiError) {
+    return {
+      status: error.status,
+      payload: {
+        error: error.clientMessage,
+        code: error.code
+      }
+    };
+  }
+  return {
+    status: 500,
+    payload: {
+      error: "Internal server error.",
+      code: "INTERNAL_ERROR"
+    }
+  };
+}
+
+async function readJsonBody(req, maxBodyBytes) {
+  const contentLengthHeader = req.headers["content-length"];
+  const declaredLength = Number(contentLengthHeader);
+  if (Number.isFinite(declaredLength) && declaredLength > maxBodyBytes) {
+    throw createApiError(
+      413,
+      "PAYLOAD_TOO_LARGE",
+      "Payload too large.",
+      `Content-Length ${declaredLength} exceeds ${maxBodyBytes}`
+    );
+  }
+
   const chunks = [];
-  for await (const chunk of req) chunks.push(chunk);
+  let total = 0;
+  for await (const chunk of req) {
+    chunks.push(chunk);
+    total += chunk.length;
+    if (total > maxBodyBytes) {
+      throw createApiError(
+        413,
+        "PAYLOAD_TOO_LARGE",
+        "Payload too large.",
+        `Body length ${total} exceeds ${maxBodyBytes}`
+      );
+    }
+  }
   const raw = Buffer.concat(chunks).toString("utf8");
   if (!raw) return {};
   try {
     return JSON.parse(raw);
   } catch {
-    throw new Error("Invalid JSON body");
+    throw createApiError(400, "INVALID_JSON", "Invalid JSON body.");
   }
 }
 
 function validateRequest(body) {
   const prompt = String(body?.prompt || "").trim();
   const model = String(body?.model || "").trim();
-  if (!prompt) return "Field 'prompt' is required";
-  if (model !== "1.5" && model !== "2") return "Field 'model' must be '1.5' or '2'";
+  if (!prompt) {
+    throw createApiError(400, "INVALID_PROMPT", "Field 'prompt' is required.");
+  }
+  if (model !== "1.5" && model !== "2") {
+    throw createApiError(400, "INVALID_MODEL", "Field 'model' must be '1.5' or '2'.");
+  }
   return "";
 }
 
@@ -35,17 +99,17 @@ const server = http.createServer(async (req, res) => {
 
   if (req.method === "POST" && req.url === "/generate-image") {
     try {
-      const body = await readJsonBody(req);
-      const validationError = validateRequest(body);
-      if (validationError) return sendJson(res, 400, { error: validationError });
-
       const cfg = getConfig();
+      const body = await readJsonBody(req, cfg.maxBodyBytes);
+      validateRequest(body);
       const result = cfg.mockMode
         ? generateMockImage(body)
         : await generateAzureImage(body);
       return sendJson(res, 200, result);
     } catch (error) {
-      return sendJson(res, 500, { error: error.message || "Unexpected server error" });
+      logInternalError(error);
+      const { status, payload } = getPublicErrorPayload(error);
+      return sendJson(res, status, payload);
     }
   }
 
