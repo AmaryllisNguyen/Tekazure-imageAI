@@ -1,0 +1,1301 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Tekazure-imageAI — Hiện trạng Repo</title>
+<style>
+  :root {
+    --bg: #0d1117;
+    --surface: #161b22;
+    --surface2: #21262d;
+    --border: #30363d;
+    --accent: #58a6ff;
+    --accent2: #3fb950;
+    --accent3: #f78166;
+    --accent4: #d2a8ff;
+    --accent5: #ffa657;
+    --accent6: #79c0ff;
+    --text: #c9d1d9;
+    --text-muted: #8b949e;
+    --text-bright: #f0f6fc;
+    --warn: #f0883e;
+    --danger: #f85149;
+    --success: #3fb950;
+    --slide-gap: 2rem;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Noto Sans', sans-serif;
+    font-size: 15px;
+    line-height: 1.6;
+  }
+
+  /* NAV */
+  nav {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    height: 56px;
+    background: rgba(13,17,23,0.95);
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 2rem;
+    z-index: 1000;
+    backdrop-filter: blur(8px);
+  }
+  nav .logo {
+    font-weight: 700;
+    font-size: 1rem;
+    color: var(--text-bright);
+    display: flex; align-items: center; gap: 0.5rem;
+  }
+  nav .logo .dot { width: 10px; height: 10px; border-radius: 50%; background: var(--accent); }
+  nav .nav-links {
+    display: flex; gap: 0.25rem;
+  }
+  nav .nav-links a {
+    color: var(--text-muted);
+    text-decoration: none;
+    padding: 0.3rem 0.75rem;
+    border-radius: 6px;
+    font-size: 0.85rem;
+    transition: all 0.15s;
+  }
+  nav .nav-links a:hover, nav .nav-links a.active {
+    background: var(--surface2);
+    color: var(--text-bright);
+  }
+  nav .date-badge {
+    font-size: 0.8rem;
+    color: var(--text-muted);
+    background: var(--surface2);
+    padding: 0.2rem 0.6rem;
+    border-radius: 20px;
+    border: 1px solid var(--border);
+  }
+
+  /* MAIN LAYOUT */
+  main { margin-top: 56px; }
+
+  /* SECTION SLIDES */
+  .slide {
+    min-height: 100vh;
+    padding: 4rem 2rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    border-bottom: 1px solid var(--border);
+  }
+  .slide-inner {
+    max-width: 1100px;
+    margin: 0 auto;
+    width: 100%;
+  }
+
+  /* HERO */
+  #hero {
+    background: radial-gradient(ellipse at 20% 50%, rgba(88,166,255,0.08) 0%, transparent 60%),
+                radial-gradient(ellipse at 80% 20%, rgba(210,168,255,0.06) 0%, transparent 50%),
+                var(--bg);
+  }
+  .hero-badge {
+    display: inline-flex; align-items: center; gap: 0.4rem;
+    background: rgba(88,166,255,0.1);
+    border: 1px solid rgba(88,166,255,0.3);
+    color: var(--accent);
+    padding: 0.3rem 0.8rem;
+    border-radius: 20px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    margin-bottom: 1.5rem;
+  }
+  .hero-title {
+    font-size: clamp(2rem, 5vw, 3.5rem);
+    font-weight: 800;
+    color: var(--text-bright);
+    line-height: 1.1;
+    margin-bottom: 1rem;
+  }
+  .hero-title .highlight { color: var(--accent); }
+  .hero-sub {
+    font-size: 1.15rem;
+    color: var(--text-muted);
+    max-width: 620px;
+    margin-bottom: 2.5rem;
+  }
+  .stats-row {
+    display: flex; flex-wrap: wrap; gap: 1rem;
+  }
+  .stat-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 1.25rem 1.5rem;
+    min-width: 150px;
+    flex: 1;
+    max-width: 220px;
+  }
+  .stat-card .num {
+    font-size: 2rem;
+    font-weight: 800;
+    color: var(--text-bright);
+    line-height: 1;
+  }
+  .stat-card .label {
+    font-size: 0.8rem;
+    color: var(--text-muted);
+    margin-top: 0.3rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+
+  /* SECTION HEADERS */
+  .section-label {
+    font-size: 0.75rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--accent);
+    margin-bottom: 0.75rem;
+  }
+  .section-title {
+    font-size: clamp(1.5rem, 3vw, 2.5rem);
+    font-weight: 800;
+    color: var(--text-bright);
+    margin-bottom: 0.75rem;
+    line-height: 1.2;
+  }
+  .section-desc {
+    color: var(--text-muted);
+    max-width: 640px;
+    margin-bottom: 2.5rem;
+    font-size: 1rem;
+  }
+
+  /* BRANCH CARDS */
+  .branches-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+    gap: 1.25rem;
+  }
+  .branch-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    overflow: hidden;
+    transition: border-color 0.2s, transform 0.2s;
+  }
+  .branch-card:hover {
+    border-color: var(--accent);
+    transform: translateY(-2px);
+  }
+  .branch-card .card-header {
+    padding: 1rem 1.25rem;
+    display: flex; align-items: center; gap: 0.75rem;
+    border-bottom: 1px solid var(--border);
+  }
+  .avatar {
+    width: 36px; height: 36px;
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-weight: 700; font-size: 0.9rem;
+    flex-shrink: 0;
+    color: #fff;
+  }
+  .card-header .info .name {
+    font-weight: 700; color: var(--text-bright); font-size: 0.95rem;
+  }
+  .card-header .info .branch-name {
+    font-size: 0.78rem; color: var(--text-muted);
+    font-family: 'SFMono-Regular', Consolas, monospace;
+  }
+  .branch-card .card-body { padding: 1.25rem; }
+  .branch-card .card-body p { color: var(--text-muted); font-size: 0.9rem; margin-bottom: 1rem; }
+  .file-list {
+    list-style: none;
+    display: flex; flex-direction: column; gap: 0.35rem;
+  }
+  .file-list li {
+    display: flex; align-items: center; gap: 0.5rem;
+    font-size: 0.82rem;
+    font-family: 'SFMono-Regular', Consolas, monospace;
+    color: var(--text);
+  }
+  .file-list li .icon { font-size: 0.9rem; }
+  .badge {
+    display: inline-block;
+    padding: 0.15rem 0.55rem;
+    border-radius: 20px;
+    font-size: 0.72rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+  }
+  .badge-merged { background: rgba(63,185,80,0.15); color: var(--success); border: 1px solid rgba(63,185,80,0.3); }
+  .badge-open { background: rgba(248,81,73,0.15); color: var(--danger); border: 1px solid rgba(248,81,73,0.3); }
+  .badge-needs-work { background: rgba(247,129,102,0.15); color: var(--warn); border: 1px solid rgba(247,129,102,0.3); }
+  .badge-skill { background: rgba(210,168,255,0.15); color: var(--accent4); border: 1px solid rgba(210,168,255,0.3); }
+  .badge-docs { background: rgba(121,192,255,0.15); color: var(--accent6); border: 1px solid rgba(121,192,255,0.3); }
+  .badges-row { display: flex; flex-wrap: wrap; gap: 0.4rem; margin-top: 0.75rem; }
+
+  /* TIMELINE */
+  .timeline {
+    position: relative;
+    padding-left: 2rem;
+  }
+  .timeline::before {
+    content: '';
+    position: absolute;
+    left: 0.55rem;
+    top: 0;
+    bottom: 0;
+    width: 2px;
+    background: var(--border);
+  }
+  .timeline-item {
+    position: relative;
+    padding-bottom: 1.75rem;
+  }
+  .timeline-item::before {
+    content: '';
+    position: absolute;
+    left: -1.45rem;
+    top: 0.35rem;
+    width: 10px; height: 10px;
+    border-radius: 50%;
+    background: var(--surface2);
+    border: 2px solid var(--border);
+  }
+  .timeline-item.done::before { background: var(--success); border-color: var(--success); }
+  .timeline-item.active::before { background: var(--accent); border-color: var(--accent); box-shadow: 0 0 0 4px rgba(88,166,255,0.2); }
+  .timeline-item.warn::before { background: var(--warn); border-color: var(--warn); }
+  .timeline-item .tl-date {
+    font-size: 0.75rem;
+    color: var(--text-muted);
+    font-family: monospace;
+    margin-bottom: 0.2rem;
+  }
+  .timeline-item .tl-title {
+    font-weight: 700;
+    color: var(--text-bright);
+    font-size: 0.95rem;
+  }
+  .timeline-item .tl-desc {
+    color: var(--text-muted);
+    font-size: 0.85rem;
+    margin-top: 0.25rem;
+  }
+
+  /* SKILL GUIDE */
+  .guide-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.5rem;
+  }
+  @media (max-width: 768px) { .guide-grid { grid-template-columns: 1fr; } }
+  .guide-box {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 1.5rem;
+  }
+  .guide-box h3 {
+    font-size: 1rem; font-weight: 700;
+    color: var(--text-bright);
+    margin-bottom: 1rem;
+    display: flex; align-items: center; gap: 0.5rem;
+  }
+  .code-block {
+    background: #010409;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 1.25rem;
+    font-family: 'SFMono-Regular', Consolas, 'Courier New', monospace;
+    font-size: 0.82rem;
+    line-height: 1.7;
+    overflow-x: auto;
+    white-space: pre;
+  }
+  .code-block .c-key { color: #ff7b72; }
+  .code-block .c-str { color: #a5d6ff; }
+  .code-block .c-comment { color: #8b949e; font-style: italic; }
+  .code-block .c-head { color: var(--accent4); }
+  .code-block .c-val { color: var(--accent5); }
+  .code-block .c-good { color: var(--success); }
+  .code-block .c-bad { color: var(--danger); }
+  .code-block .c-path { color: var(--accent6); }
+
+  /* ACTION TABLE */
+  .action-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.875rem;
+  }
+  .action-table th {
+    padding: 0.75rem 1rem;
+    text-align: left;
+    background: var(--surface2);
+    color: var(--text-muted);
+    font-weight: 600;
+    text-transform: uppercase;
+    font-size: 0.72rem;
+    letter-spacing: 0.05em;
+    border-bottom: 1px solid var(--border);
+  }
+  .action-table td {
+    padding: 0.85rem 1rem;
+    border-bottom: 1px solid var(--border);
+    vertical-align: top;
+  }
+  .action-table tr:last-child td { border-bottom: none; }
+  .action-table tr:hover td { background: rgba(255,255,255,0.02); }
+  .action-table-wrap {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    overflow: hidden;
+  }
+  .priority-high { color: var(--danger); font-weight: 700; }
+  .priority-mid  { color: var(--warn); font-weight: 600; }
+  .priority-low  { color: var(--success); }
+
+  /* STEPS */
+  .steps { display: flex; flex-direction: column; gap: 1rem; }
+  .step {
+    display: flex; gap: 1rem; align-items: flex-start;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 1.1rem 1.25rem;
+    transition: border-color 0.2s;
+  }
+  .step:hover { border-color: var(--accent); }
+  .step .step-num {
+    width: 28px; height: 28px;
+    border-radius: 50%;
+    background: var(--accent);
+    color: #fff;
+    font-weight: 800;
+    font-size: 0.85rem;
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+    margin-top: 0.1rem;
+  }
+  .step .step-content h4 {
+    font-size: 0.95rem; font-weight: 700; color: var(--text-bright); margin-bottom: 0.25rem;
+  }
+  .step .step-content p {
+    font-size: 0.85rem; color: var(--text-muted);
+  }
+  .step .step-content code {
+    font-family: monospace; font-size: 0.82rem;
+    background: rgba(255,255,255,0.07);
+    padding: 0.1rem 0.4rem;
+    border-radius: 4px;
+    color: var(--accent6);
+  }
+
+  /* CALLOUT */
+  .callout {
+    display: flex; gap: 1rem; align-items: flex-start;
+    border-radius: 10px;
+    padding: 1.1rem 1.25rem;
+    margin: 1.25rem 0;
+  }
+  .callout-warn { background: rgba(247,129,102,0.08); border: 1px solid rgba(247,129,102,0.3); }
+  .callout-info { background: rgba(88,166,255,0.08); border: 1px solid rgba(88,166,255,0.3); }
+  .callout-success { background: rgba(63,185,80,0.08); border: 1px solid rgba(63,185,80,0.3); }
+  .callout .callout-icon { font-size: 1.2rem; margin-top: 0.05rem; }
+  .callout .callout-body { font-size: 0.88rem; }
+  .callout .callout-body strong { display: block; margin-bottom: 0.25rem; font-size: 0.92rem; }
+
+  /* COMPARISON TABLE */
+  .compare-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.25rem;
+  }
+  @media(max-width:700px){ .compare-grid{ grid-template-columns:1fr; } }
+  .compare-box {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    overflow: hidden;
+  }
+  .compare-box .cbox-header {
+    padding: 0.75rem 1rem;
+    font-weight: 700; font-size: 0.9rem;
+    border-bottom: 1px solid var(--border);
+    display: flex; align-items: center; gap: 0.5rem;
+  }
+  .cbox-header.bad { background: rgba(248,81,73,0.1); color: var(--danger); }
+  .cbox-header.good { background: rgba(63,185,80,0.1); color: var(--success); }
+  .compare-box ul {
+    list-style: none; padding: 1rem; display: flex; flex-direction: column; gap: 0.5rem;
+  }
+  .compare-box ul li {
+    font-size: 0.85rem; color: var(--text-muted);
+    display: flex; align-items: flex-start; gap: 0.5rem;
+  }
+  .compare-box ul li .ic { flex-shrink: 0; }
+
+  /* CHECKLIST */
+  .checklist { list-style: none; display: flex; flex-direction: column; gap: 0.6rem; }
+  .checklist li {
+    display: flex; align-items: flex-start; gap: 0.75rem;
+    padding: 0.7rem 1rem;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    font-size: 0.88rem;
+  }
+  .checklist li .ci { font-size: 1rem; }
+  .checklist li .ct { color: var(--text-muted); }
+  .checklist li .ct strong { color: var(--text-bright); }
+
+  /* FOOTER */
+  footer {
+    background: var(--surface);
+    border-top: 1px solid var(--border);
+    padding: 2rem;
+    text-align: center;
+    color: var(--text-muted);
+    font-size: 0.82rem;
+  }
+
+  /* SCROLL TO TOP */
+  .scroll-top {
+    position: fixed;
+    bottom: 2rem; right: 2rem;
+    width: 40px; height: 40px;
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    cursor: pointer;
+    font-size: 1rem;
+    color: var(--text-muted);
+    transition: all 0.2s;
+    text-decoration: none;
+    z-index: 999;
+  }
+  .scroll-top:hover { background: var(--surface); color: var(--text-bright); border-color: var(--accent); }
+
+  /* INDENT helper */
+  .indent { margin-left: 1.5rem; }
+
+  /* ALT BG */
+  .alt-bg { background: var(--surface); }
+
+  /* TAG */
+  .tag {
+    display: inline-block;
+    padding: 0.1rem 0.45rem;
+    border-radius: 4px;
+    font-size: 0.75rem;
+    font-family: monospace;
+    background: rgba(255,255,255,0.08);
+    color: var(--accent6);
+  }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <div class="logo">
+    <div class="dot"></div>
+    Tekazure-imageAI
+  </div>
+  <div class="nav-links">
+    <a href="#hero">Tổng quan</a>
+    <a href="#branches">Nhánh</a>
+    <a href="#timeline">Timeline</a>
+    <a href="#actions">Việc cần làm</a>
+    <a href="#skill-guide">Skill Guide</a>
+    <a href="#merge-guide">Merge Guide</a>
+  </div>
+  <div class="date-badge">📅 05 / 05 / 2026</div>
+</nav>
+
+<main>
+
+<!-- ════════════════════════ HERO ════════════════════════ -->
+<section class="slide" id="hero">
+  <div class="slide-inner">
+    <div class="hero-badge">
+      <span>🔎</span> Báo cáo hiện trạng Repo
+    </div>
+    <h1 class="hero-title">
+      <span class="highlight">Tekazure-imageAI</span><br>
+      Repository Status Report
+    </h1>
+    <p class="hero-sub">
+      Phân tích toàn diện các nhánh, contributors, tiến độ và hướng dẫn tích hợp
+      AI Agent Skills cho dự án đầu tay của team.
+    </p>
+    <div class="stats-row">
+      <div class="stat-card">
+        <div class="num" style="color:var(--accent)">6</div>
+        <div class="label">Branches</div>
+      </div>
+      <div class="stat-card">
+        <div class="num" style="color:var(--accent4)">6</div>
+        <div class="label">Contributors</div>
+      </div>
+      <div class="stat-card">
+        <div class="num" style="color:var(--success)">5</div>
+        <div class="label">PRs đã merge</div>
+      </div>
+      <div class="stat-card">
+        <div class="num" style="color:var(--warn)">2</div>
+        <div class="label">Branches chưa merge</div>
+      </div>
+      <div class="stat-card">
+        <div class="num" style="color:var(--accent5)">2</div>
+        <div class="label">Skills tạo được</div>
+      </div>
+    </div>
+
+    <div class="callout callout-info" style="margin-top:2rem">
+      <div class="callout-icon">💡</div>
+      <div class="callout-body">
+        <strong>Đây là project đầu tiên của team dùng GitHub.</strong>
+        Nhiều thành viên chưa quen với workflow branch → PR → merge. Tài liệu này
+        giúp mọi người hiểu nhau đang làm gì và biết bước tiếp theo là gì.
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ════════════════════════ BRANCHES ════════════════════════ -->
+<section class="slide alt-bg" id="branches">
+  <div class="slide-inner">
+    <div class="section-label">Phân tích</div>
+    <h2 class="section-title">Từng Branch — Ai đang làm gì?</h2>
+    <p class="section-desc">
+      Mỗi thành viên làm việc trên một nhánh riêng. Dưới đây là hiện trạng chi tiết từng nhánh.
+    </p>
+
+    <div class="branches-grid">
+
+      <!-- AMY -->
+      <div class="branch-card">
+        <div class="card-header">
+          <div class="avatar" style="background:#e07b54">A</div>
+          <div class="info">
+            <div class="name">Amy Nguyen</div>
+            <div class="branch-name">origin/Amybranch  →  ✅ merged into main</div>
+          </div>
+        </div>
+        <div class="card-body">
+          <p><strong style="color:var(--text-bright)">Vai trò: Project Lead / Backend Developer</strong><br>
+          Amy là người khởi tạo repo. Cô ấy đã xây dựng toàn bộ nền tảng backend Node.js cho project
+          và merge PR #1 vào main.</p>
+          <ul class="file-list">
+            <li><span class="icon">⚙️</span> <span>src/server.js — HTTP server với routing</span></li>
+            <li><span class="icon">🔐</span> <span>src/azureImageClient.js — Azure AI integration</span></li>
+            <li><span class="icon">🎭</span> <span>src/mockImageProvider.js — Mock fallback</span></li>
+            <li><span class="icon">🛡️</span> <span>src/config.js, errors.js — Hardening & security</span></li>
+            <li><span class="icon">📄</span> <span>README.md — Hướng dẫn chạy app</span></li>
+          </ul>
+          <div class="badges-row">
+            <span class="badge badge-merged">✅ Merged</span>
+            <span class="badge badge-docs">Backend Core</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- NOAH -->
+      <div class="branch-card">
+        <div class="card-header">
+          <div class="avatar" style="background:#3fb950">N</div>
+          <div class="info">
+            <div class="name">Noah (doom1281995)</div>
+            <div class="branch-name">origin/noah-branch  →  ✅ merged into main</div>
+          </div>
+        </div>
+        <div class="card-body">
+          <p><strong style="color:var(--text-bright)">Vai trò: AI Skills Developer</strong><br>
+          Noah đã tạo thư mục skill đầu tiên cho team — skill <strong>i18n-ui</strong> giúp AI
+          xử lý giao diện đa ngôn ngữ. Đây là skill có cấu trúc tốt nhất trong repo hiện tại.</p>
+          <ul class="file-list">
+            <li><span class="icon">🧠</span> <span>i18n-ui/SKILL.md — AI Skill cho i18n UI</span></li>
+            <li><span class="icon">📚</span> <span>i18n-ui/references/react.md</span></li>
+            <li><span class="icon">📚</span> <span>i18n-ui/references/vue.md</span></li>
+            <li><span class="icon">📚</span> <span>i18n-ui/references/rtl.md</span></li>
+            <li><span class="icon">📚</span> <span>i18n-ui/references/file-structure.md</span></li>
+          </ul>
+          <div class="badges-row">
+            <span class="badge badge-merged">✅ Merged</span>
+            <span class="badge badge-skill">AI Skill</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- MICHAEL -->
+      <div class="branch-card">
+        <div class="card-header">
+          <div class="avatar" style="background:#58a6ff">M</div>
+          <div class="info">
+            <div class="name">Michael (doom1281995)</div>
+            <div class="branch-name">origin/Michael-Branch  →  ✅ merged into main</div>
+          </div>
+        </div>
+        <div class="card-body">
+          <p><strong style="color:var(--text-bright)">Vai trò: Documentation Researcher</strong><br>
+          Michael đã scrape và index toàn bộ tài liệu API chính thức của GPT-Image-1.5.
+          Đây là tư liệu nghiên cứu quan trọng cho team tham khảo.</p>
+          <ul class="file-list">
+            <li><span class="icon">📑</span> <span>GPT_IMAGE_1_5_EDIT_DOCS_INDEX.md — Index tài liệu API</span></li>
+            <li><span class="icon">📄</span> <span>GPT_IMAGE_1_5_EDIT_DOCS_SCRAPED.md — Nội dung đầy đủ</span></li>
+          </ul>
+          <div class="callout callout-warn" style="margin-top:0.75rem; padding:0.75rem 1rem">
+            <div class="callout-icon" style="font-size:0.9rem">⚠️</div>
+            <div class="callout-body" style="font-size:0.8rem">
+              <strong>Lưu ý:</strong> Tài liệu đặt ở root — nên di chuyển vào <code>docs/</code> hoặc
+              tạo thành một Skill riêng để AI có thể dùng được.
+            </div>
+          </div>
+          <div class="badges-row">
+            <span class="badge badge-merged">✅ Merged</span>
+            <span class="badge badge-docs">API Docs</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- EDDIE -->
+      <div class="branch-card">
+        <div class="card-header">
+          <div class="avatar" style="background:#d2a8ff">E</div>
+          <div class="info">
+            <div class="name">Eddie (QuanTANguyen)</div>
+            <div class="branch-name">origin/Eddie  →  ✅ merged into main</div>
+          </div>
+        </div>
+        <div class="card-body">
+          <p><strong style="color:var(--text-bright)">Vai trò: AI Skills Developer</strong><br>
+          Eddie đã tạo 2 AI skills quan trọng: <strong>code-review</strong> và <strong>security-review</strong>.
+          Tuy nhiên, đặt sai thư mục — dùng <code>.agents/skills/</code> thay vì <code>.codex/skills/</code>.</p>
+          <ul class="file-list">
+            <li><span class="icon">🔍</span> <span>.agents/skills/code-review/skill.md</span></li>
+            <li><span class="icon">🛡️</span> <span>.agents/skills/security-review/skill.md</span></li>
+            <li><span class="icon">📄</span> <span>Code-review.md, Security-review.md (ở root)</span></li>
+          </ul>
+          <div class="callout callout-warn" style="margin-top:0.75rem; padding:0.75rem 1rem">
+            <div class="callout-icon" style="font-size:0.9rem">⚠️</div>
+            <div class="callout-body" style="font-size:0.8rem">
+              <strong>Cần sửa:</strong> Đổi <code>.agents/skills/</code> thành <code>.codex/skills/</code>
+              để Codex nhận diện đúng.
+            </div>
+          </div>
+          <div class="badges-row">
+            <span class="badge badge-merged">✅ Merged</span>
+            <span class="badge badge-skill">AI Skill</span>
+            <span class="badge badge-needs-work">Cần sửa path</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- NIKOLAS -->
+      <div class="branch-card">
+        <div class="card-header">
+          <div class="avatar" style="background:#ffa657">K</div>
+          <div class="info">
+            <div class="name">Nikolas (NikolasSEO)</div>
+            <div class="branch-name">origin/nikolas-feature  →  ✅ merged into main</div>
+          </div>
+        </div>
+        <div class="card-body">
+          <p><strong style="color:var(--text-bright)">Vai trò: Contributor (mới bắt đầu)</strong><br>
+          Nikolas đã tạo branch và commit đầu tiên — nhưng chỉ có một file trống <code>NikolasTest.txt</code>.
+          Dấu hiệu cho thấy đang học cách dùng Git, chưa biết phải đặt gì vào.</p>
+          <ul class="file-list">
+            <li><span class="icon">📝</span> <span>ref/Nikolas/NikolasTest.txt — File trống (test commit)</span></li>
+          </ul>
+          <div class="callout callout-warn" style="margin-top:0.75rem; padding:0.75rem 1rem">
+            <div class="callout-icon" style="font-size:0.9rem">💬</div>
+            <div class="callout-body" style="font-size:0.8rem">
+              <strong>Gợi ý:</strong> Nikolas nên tạo một AI Skill mới trong <code>.codex/skills/</code>
+              — ví dụ skill về SEO, image optimization, hay Azure-specific workflows.
+            </div>
+          </div>
+          <div class="badges-row">
+            <span class="badge badge-merged">✅ Merged</span>
+            <span class="badge badge-needs-work">Cần nội dung</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- VERONICA -->
+      <div class="branch-card" style="border-color:var(--danger)">
+        <div class="card-header">
+          <div class="avatar" style="background:#f85149">V</div>
+          <div class="info">
+            <div class="name">Veronica (vantranthuy)</div>
+            <div class="branch-name">origin/VeronicaBranch  →  ⚠️ CHƯA MERGE</div>
+          </div>
+        </div>
+        <div class="card-body">
+          <p><strong style="color:var(--text-bright)">Vai trò: Researcher / Documentation</strong><br>
+          Veronica đã upload tài liệu tham khảo (Word docs) về Git, OpenAI GPT-Image-2, và vibe-brainstorm.
+          Branch chưa tạo PR, chưa được review.</p>
+          <ul class="file-list">
+            <li><span class="icon">📘</span> <span>Veron Ref/Git .docx — Tài liệu học Git</span></li>
+            <li><span class="icon">📘</span> <span>Veron Ref/OpenAI_GPT-Image-2_Beginner_Guide.docx</span></li>
+            <li><span class="icon">📘</span> <span>Veron Ref/vibe-brainstorm-guidance.docx</span></li>
+          </ul>
+          <div class="callout callout-warn" style="margin-top:0.75rem; padding:0.75rem 1rem">
+            <div class="callout-icon" style="font-size:0.9rem">🚨</div>
+            <div class="callout-body" style="font-size:0.8rem">
+              <strong>Hành động cần thiết:</strong> Tạo Pull Request để merge vào main.
+              Cân nhắc chuyển .docx thành .md để dễ xem trên GitHub. Nên tạo thêm AI Skill
+              từ nội dung nghiên cứu này.
+            </div>
+          </div>
+          <div class="badges-row">
+            <span class="badge badge-open">⚠️ Chưa merge</span>
+            <span class="badge badge-docs">Tài liệu tham khảo</span>
+            <span class="badge badge-needs-work">Cần tạo PR</span>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ════════════════════════ TIMELINE ════════════════════════ -->
+<section class="slide" id="timeline">
+  <div class="slide-inner">
+    <div class="section-label">Lịch sử</div>
+    <h2 class="section-title">Timeline của Project</h2>
+    <p class="section-desc">Chuỗi sự kiện từ khi khởi tạo đến hiện tại (05/05/2026).</p>
+
+    <div class="timeline">
+      <div class="timeline-item done">
+        <div class="tl-date">28 Apr 2026</div>
+        <div class="tl-title">🚀 Amy khởi tạo project</div>
+        <div class="tl-desc">Tạo backend Node.js với Azure Image API, mock fallback, security hardening.
+        PR #1 merge vào main.</div>
+      </div>
+      <div class="timeline-item done">
+        <div class="tl-date">29 Apr 2026</div>
+        <div class="tl-title">🧠 Noah thêm i18n-ui Skill</div>
+        <div class="tl-desc">Skill AI đầu tiên với frontmatter chuẩn, references đầy đủ.
+        PR #2 merge vào main. Đây là ví dụ tốt nhất để team noi theo.</div>
+      </div>
+      <div class="timeline-item done">
+        <div class="tl-date">30 Apr 2026</div>
+        <div class="tl-title">📚 Michael thêm tài liệu GPT-Image API</div>
+        <div class="tl-desc">Index và scrape đầy đủ tài liệu OpenAI GPT-Image-1.5.
+        PR #3 merge vào main.</div>
+      </div>
+      <div class="timeline-item done">
+        <div class="tl-date">04 May 2026</div>
+        <div class="tl-title">🔗 Nikolas merge branch đầu tiên</div>
+        <div class="tl-desc">Nikolas commit file test, tập dùng Git workflow.
+        PR #4 merge vào main. Branch còn trống, cần nội dung thực sự.</div>
+      </div>
+      <div class="timeline-item done">
+        <div class="tl-date">05 May 2026</div>
+        <div class="tl-title">🛡️ Eddie thêm Skills code-review & security-review</div>
+        <div class="tl-desc">PR #5 merge. 2 skills chất lượng tốt nhưng đặt trong
+        <code>.agents/skills/</code> — cần di chuyển sang <code>.codex/skills/</code>.</div>
+      </div>
+      <div class="timeline-item active">
+        <div class="tl-date">05 May 2026 — Hiện tại</div>
+        <div class="tl-title">⏳ Veronica — Branch chưa được merge</div>
+        <div class="tl-desc">Có 3 file tài liệu .docx nhưng chưa tạo Pull Request.
+        Cần hành động để merge vào main.</div>
+      </div>
+      <div class="timeline-item warn">
+        <div class="tl-date">Sắp tới</div>
+        <div class="tl-title">🎯 Tái cấu trúc Skills → .codex/skills/</div>
+        <div class="tl-desc">Di chuyển tất cả skills vào đúng thư mục <code>.codex/skills/</code>
+        để Codex tự động nhận diện khi làm việc với codebase.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ════════════════════════ ACTIONS ════════════════════════ -->
+<section class="slide alt-bg" id="actions">
+  <div class="slide-inner">
+    <div class="section-label">Kế hoạch hành động</div>
+    <h2 class="section-title">Việc cần làm tiếp theo</h2>
+    <p class="section-desc">
+      Danh sách hành động cụ thể cho từng thành viên để đưa project về trạng thái tốt.
+    </p>
+
+    <div class="action-table-wrap">
+      <table class="action-table">
+        <thead>
+          <tr>
+            <th>Ưu tiên</th>
+            <th>Người thực hiện</th>
+            <th>Việc cần làm</th>
+            <th>Lý do</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><span class="priority-high">🔴 Cao</span></td>
+            <td>
+              <div style="display:flex;align-items:center;gap:0.5rem">
+                <div class="avatar" style="width:24px;height:24px;font-size:0.7rem;background:#f85149">V</div>
+                Veronica
+              </div>
+            </td>
+            <td>Tạo Pull Request từ <code class="tag">VeronicaBranch</code> → <code class="tag">main</code></td>
+            <td style="color:var(--text-muted);font-size:0.82rem">Branch chưa có PR, tài liệu chưa được tích hợp vào main.</td>
+          </tr>
+          <tr>
+            <td><span class="priority-high">🔴 Cao</span></td>
+            <td>
+              <div style="display:flex;align-items:center;gap:0.5rem">
+                <div class="avatar" style="width:24px;height:24px;font-size:0.7rem;background:#d2a8ff">E</div>
+                Eddie
+              </div>
+            </td>
+            <td>Di chuyển skills từ <code class="tag">.agents/skills/</code> sang <code class="tag">.codex/skills/</code></td>
+            <td style="color:var(--text-muted);font-size:0.82rem">Codex đọc <code>.codex/skills/</code> — skills hiện tại không được nhận diện đúng.</td>
+          </tr>
+          <tr>
+            <td><span class="priority-mid">🟡 Trung</span></td>
+            <td>
+              <div style="display:flex;align-items:center;gap:0.5rem">
+                <div class="avatar" style="width:24px;height:24px;font-size:0.7rem;background:#ffa657">K</div>
+                Nikolas
+              </div>
+            </td>
+            <td>Tạo AI Skill thực sự trong <code class="tag">.codex/skills/nikolas-seo/</code></td>
+            <td style="color:var(--text-muted);font-size:0.82rem">Branch hiện chỉ có file test trống — cần đóng góp nội dung thực tế.</td>
+          </tr>
+          <tr>
+            <td><span class="priority-mid">🟡 Trung</span></td>
+            <td>
+              <div style="display:flex;align-items:center;gap:0.5rem">
+                <div class="avatar" style="width:24px;height:24px;font-size:0.7rem;background:#58a6ff">M</div>
+                Michael
+              </div>
+            </td>
+            <td>Tạo skill <code class="tag">.codex/skills/gpt-image-api/</code> từ tài liệu đã research</td>
+            <td style="color:var(--text-muted);font-size:0.82rem">Tài liệu đang để ở root — chuyển thành Skill giúp AI dùng được trực tiếp.</td>
+          </tr>
+          <tr>
+            <td><span class="priority-mid">🟡 Trung</span></td>
+            <td>
+              <div style="display:flex;align-items:center;gap:0.5rem">
+                <div class="avatar" style="width:24px;height:24px;font-size:0.7rem;background:#f85149">V</div>
+                Veronica
+              </div>
+            </td>
+            <td>Chuyển <code class="tag">.docx</code> → <code class="tag">.md</code>, tạo skill từ nội dung</td>
+            <td style="color:var(--text-muted);font-size:0.82rem">File .docx không xem được trên GitHub và AI không đọc được.</td>
+          </tr>
+          <tr>
+            <td><span class="priority-low">🟢 Thấp</span></td>
+            <td>
+              <div style="display:flex;align-items:center;gap:0.5rem">
+                <div class="avatar" style="width:24px;height:24px;font-size:0.7rem;background:#3fb950">N</div>
+                Noah
+              </div>
+            </td>
+            <td>Di chuyển <code class="tag">i18n-ui/</code> → <code class="tag">.codex/skills/i18n-ui/</code></td>
+            <td style="color:var(--text-muted);font-size:0.82rem">Skill đã tốt, chỉ cần đặt đúng vị trí để Codex nhận diện.</td>
+          </tr>
+          <tr>
+            <td><span class="priority-low">🟢 Thấp</span></td>
+            <td>
+              <div style="display:flex;align-items:center;gap:0.5rem">
+                <div class="avatar" style="width:24px;height:24px;font-size:0.7rem;background:#e07b54">A</div>
+                Amy (Lead)
+              </div>
+            </td>
+            <td>Review PR của Veronica và thiết lập <code class="tag">branch protection rules</code></td>
+            <td style="color:var(--text-muted);font-size:0.82rem">Đảm bảo code review trước khi merge, bảo vệ branch main.</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+<!-- ════════════════════════ SKILL GUIDE ════════════════════════ -->
+<section class="slide" id="skill-guide">
+  <div class="slide-inner">
+    <div class="section-label">Hướng dẫn</div>
+    <h2 class="section-title">Tạo AI Skills đúng cách cho Codex</h2>
+    <p class="section-desc">
+      Codex đọc skills từ thư mục <code class="tag">.codex/skills/</code>. Dưới đây là quy cách
+      chuẩn để tạo một skill mới.
+    </p>
+
+    <!-- STEP 1: CẤU TRÚC THƯ MỤC -->
+    <div class="guide-grid" style="margin-bottom:2rem">
+      <div class="guide-box">
+        <h3>📁 Cấu trúc thư mục</h3>
+        <div class="code-block"><span class="c-path">.codex/</span>
+└── <span class="c-path">skills/</span>
+    ├── <span class="c-good">code-review/</span>        <span class="c-comment"># ✅ Đúng</span>
+    │   └── SKILL.md
+    ├── <span class="c-good">security-review/</span>    <span class="c-comment"># ✅ Đúng</span>
+    │   └── SKILL.md
+    ├── <span class="c-good">i18n-ui/</span>            <span class="c-comment"># ✅ Đúng</span>
+    │   ├── SKILL.md
+    │   └── references/
+    └── <span class="c-good">gpt-image-api/</span>      <span class="c-comment"># 🆕 Cần tạo</span>
+        └── SKILL.md</div>
+        <div class="callout callout-warn" style="margin-top:1rem">
+          <div class="callout-icon">⚠️</div>
+          <div class="callout-body" style="font-size:0.82rem">
+            <strong>Eddie cần sửa:</strong> Đổi từ <code>.agents/skills/</code> thành
+            <code>.codex/skills/</code>
+          </div>
+        </div>
+      </div>
+
+      <div class="guide-box">
+        <h3>📋 Tên file: SKILL.md (viết HOA)</h3>
+        <div class="code-block"><span class="c-comment"># Tên file phải là SKILL.md (chữ HOA)</span>
+<span class="c-comment"># Không phải: skill.md, Skill.md, skill.txt</span>
+
+<span class="c-good">.codex/skills/my-skill/SKILL.md</span>  <span class="c-comment"># ✅</span>
+<span class="c-bad">.codex/skills/my-skill/skill.md</span>  <span class="c-comment"># ❌</span>
+<span class="c-bad">.agents/skills/my-skill/skill.md</span> <span class="c-comment"># ❌ Sai thư mục</span>
+
+<span class="c-comment"># Tên thư mục: kebab-case, ngắn gọn</span>
+<span class="c-good">code-review/</span>          <span class="c-comment"># ✅</span>
+<span class="c-good">i18n-ui/</span>              <span class="c-comment"># ✅</span>
+<span class="c-good">gpt-image-api/</span>        <span class="c-comment"># ✅</span>
+<span class="c-bad">CodeReview/</span>           <span class="c-comment"># ❌ PascalCase</span>
+<span class="c-bad">my_skill/</span>             <span class="c-comment"># ❌ underscore</span></div>
+      </div>
+    </div>
+
+    <!-- TEMPLATE SKILL.md -->
+    <div class="guide-box" style="margin-bottom:2rem">
+      <h3>📝 Template chuẩn cho SKILL.md</h3>
+      <div class="code-block">---
+<span class="c-key">name</span>: <span class="c-str">ten-skill-cua-ban</span>
+<span class="c-key">description</span>: <span class="c-str">&gt;</span>
+  <span class="c-str">Mô tả ngắn gọn khi nào nên dùng skill này.</span>
+  <span class="c-str">Dùng từ khóa trigger: khi user nói X, Y, Z thì kích hoạt skill.</span>
+  <span class="c-str">Ví dụ: "Trigger khi user hỏi về image editing, GPT-Image, Azure AI Images"</span>
+---
+
+<span class="c-head"># Tên Skill</span>
+
+Mô tả ngắn gọn skill này làm gì.
+
+<span class="c-head">## Khi nào dùng Skill này?</span>
+
+Liệt kê các tình huống cụ thể:
+- Khi user hỏi về...
+- Khi cần implement...
+- Khi debug lỗi...
+
+<span class="c-head">## Hướng dẫn sử dụng</span>
+
+### Bước 1 — ...
+### Bước 2 — ...
+
+<span class="c-head">## Ví dụ thực tế</span>
+
+```javascript
+// Code ví dụ nếu có
+```
+
+<span class="c-head">## Checklist</span>
+
+- [ ] Kiểm tra X
+- [ ] Đảm bảo Y
+- [ ] Xử lý edge case Z
+
+<span class="c-head">## Tham khảo</span>
+
+- [Link tài liệu chính thức](https://...)</div>
+    </div>
+
+    <!-- COMPARE GOOD/BAD -->
+    <div class="compare-grid">
+      <div class="compare-box">
+        <div class="cbox-header bad">❌ Làm sai</div>
+        <ul>
+          <li><span class="ic">❌</span> Đặt file vào <code class="tag">.agents/skills/</code> (Eddie)</li>
+          <li><span class="ic">❌</span> Đặt tài liệu .md ở root repo (Michael)</li>
+          <li><span class="ic">❌</span> File tên <code class="tag">skill.md</code> (chữ thường)</li>
+          <li><span class="ic">❌</span> Upload .docx — AI và GitHub không đọc được (Veronica)</li>
+          <li><span class="ic">❌</span> Không có frontmatter <code class="tag">---name: description:---</code></li>
+          <li><span class="ic">❌</span> Skill không có trigger keywords</li>
+          <li><span class="ic">❌</span> Tên thư mục dùng PascalCase hoặc underscore</li>
+        </ul>
+      </div>
+      <div class="compare-box">
+        <div class="cbox-header good">✅ Làm đúng</div>
+        <ul>
+          <li><span class="ic">✅</span> Đặt vào <code class="tag">.codex/skills/ten-skill/SKILL.md</code></li>
+          <li><span class="ic">✅</span> Frontmatter đầy đủ: <code class="tag">name</code>, <code class="tag">description</code></li>
+          <li><span class="ic">✅</span> Tên file <code class="tag">SKILL.md</code> (chữ HOA)</li>
+          <li><span class="ic">✅</span> Viết tài liệu bằng Markdown (.md)</li>
+          <li><span class="ic">✅</span> Có trigger keywords trong <code>description</code></li>
+          <li><span class="ic">✅</span> Thư mục kebab-case: <code class="tag">gpt-image-api</code></li>
+          <li><span class="ic">✅</span> Có sub-folder <code class="tag">references/</code> nếu cần tài liệu phụ</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ════════════════════════ MERGE GUIDE ════════════════════════ -->
+<section class="slide alt-bg" id="merge-guide">
+  <div class="slide-inner">
+    <div class="section-label">Hướng dẫn Git</div>
+    <h2 class="section-title">Cách merge Branch vào Main — từng bước</h2>
+    <p class="section-desc">
+      Hướng dẫn dành cho team members lần đầu dùng GitHub. Veronica làm theo ngay nhé!
+    </p>
+
+    <div class="guide-grid" style="margin-bottom:2rem">
+      <div>
+        <h3 style="color:var(--text-bright);margin-bottom:1rem;font-size:1rem">
+          🌐 Cách 1 — Qua GitHub Website (Dễ nhất)
+        </h3>
+        <div class="steps">
+          <div class="step">
+            <div class="step-num">1</div>
+            <div class="step-content">
+              <h4>Vào trang repo trên GitHub</h4>
+              <p>Mở <code>github.com/AmaryllisNguyen/Tekazure-imageAI</code></p>
+            </div>
+          </div>
+          <div class="step">
+            <div class="step-num">2</div>
+            <div class="step-content">
+              <h4>Chọn "Pull requests" → "New pull request"</h4>
+              <p>Click tab <strong>Pull requests</strong> ở top menu, rồi click nút xanh <strong>New pull request</strong></p>
+            </div>
+          </div>
+          <div class="step">
+            <div class="step-num">3</div>
+            <div class="step-content">
+              <h4>Chọn branch của mình</h4>
+              <p>Base: <code>main</code> ← Compare: <code>VeronicaBranch</code> (chọn branch của bạn)</p>
+            </div>
+          </div>
+          <div class="step">
+            <div class="step-num">4</div>
+            <div class="step-content">
+              <h4>Điền tiêu đề và mô tả</h4>
+              <p>Tiêu đề: <em>"Add reference documents: Git guide, GPT-Image-2 guide, Brainstorm guidance"</em></p>
+            </div>
+          </div>
+          <div class="step">
+            <div class="step-num">5</div>
+            <div class="step-content">
+              <h4>Click "Create pull request"</h4>
+              <p>Sau đó nhờ Amy hoặc Nikolas review và approve merge.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div>
+        <h3 style="color:var(--text-bright);margin-bottom:1rem;font-size:1rem">
+          💻 Cách 2 — Qua Terminal (Nâng cao)
+        </h3>
+        <div class="code-block"><span class="c-comment"># Bước 1: Đảm bảo branch của bạn được push lên</span>
+git add .
+git commit -m "feat: add reference documents"
+git push origin VeronicaBranch
+
+<span class="c-comment"># Bước 2: Tạo PR bằng GitHub CLI</span>
+gh pr create \
+  --base main \
+  --head VeronicaBranch \
+  --title "Add reference documents" \
+  --body "Thêm tài liệu tham khảo Git và GPT-Image-2"
+
+<span class="c-comment"># Bước 3: Xem trạng thái PR</span>
+gh pr list
+
+<span class="c-comment"># Bước 4: Merge (khi đã được approve)</span>
+gh pr merge --squash</div>
+
+        <div class="callout callout-success" style="margin-top:1rem">
+          <div class="callout-icon">✅</div>
+          <div class="callout-body" style="font-size:0.82rem">
+            <strong>Tip:</strong> Sau khi merge xong, xóa branch cũ để repo gọn gàng:
+            <br><code>git branch -d VeronicaBranch</code>
+            <br><code>git push origin --delete VeronicaBranch</code>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Eddie sửa path -->
+    <div class="guide-box" style="margin-bottom:2rem">
+      <h3>🔧 Eddie — Cách sửa đường dẫn Skills</h3>
+      <div class="code-block"><span class="c-comment"># Trên branch Eddie (sau khi đã được checkout)</span>
+git checkout -b fix/skill-paths
+
+<span class="c-comment"># Tạo thư mục đúng</span>
+mkdir -p .codex/skills/code-review
+mkdir -p .codex/skills/security-review
+
+<span class="c-comment"># Di chuyển files</span>
+<span class="c-comment"># Windows:</span>
+Move-Item .agents/skills/code-review/skill.md .codex/skills/code-review/SKILL.md
+Move-Item .agents/skills/security-review/skill.md .codex/skills/security-review/SKILL.md
+
+<span class="c-comment"># Xóa thư mục cũ</span>
+Remove-Item -Recurse -Force .agents/
+
+<span class="c-comment"># Commit và tạo PR</span>
+git add .
+git commit -m "fix: move skills to .codex/skills/ directory"
+git push origin fix/skill-paths
+gh pr create --base main --title "fix: move skills to correct .codex/skills/ path"</div>
+    </div>
+
+    <!-- Veronica .docx → .md -->
+    <div class="guide-box">
+      <h3>📄 Veronica — Chuyển .docx thành .md</h3>
+      <div class="code-block"><span class="c-comment"># Cách đơn giản nhất: dùng Pandoc</span>
+pandoc "Veron Ref/Git .docx" -o "docs/git-guide.md"
+pandoc "Veron Ref/OpenAI_GPT-Image-2_Beginner_Guide_2026-04-29.docx" -o "docs/gpt-image-2-guide.md"
+
+<span class="c-comment"># Hoặc tạo thủ công SKILL.md từ nội dung .docx</span>
+<span class="c-comment"># .codex/skills/gpt-image-2-guide/SKILL.md</span>
+
+<span class="c-comment">---</span>
+<span class="c-key">name</span>: <span class="c-str">gpt-image-2-guide</span>
+<span class="c-key">description</span>: <span class="c-str">&gt;</span>
+  <span class="c-str">Hướng dẫn sử dụng GPT-Image-2 API của OpenAI cho người mới bắt đầu.</span>
+  <span class="c-str">Trigger khi user hỏi về GPT-Image-2, image generation, OpenAI image API.</span>
+<span class="c-comment">---</span>
+
+<span class="c-head"># GPT-Image-2 Beginner Guide</span>
+... nội dung từ .docx của bạn ...</div>
+    </div>
+  </div>
+</section>
+
+<!-- ════════════════════════ SUMMARY ════════════════════════ -->
+<section class="slide" id="summary">
+  <div class="slide-inner">
+    <div class="section-label">Tổng kết</div>
+    <h2 class="section-title">Trạng thái tổng hợp & Next Steps</h2>
+    <p class="section-desc">
+      Checklist nhanh để đưa repo về trạng thái tối ưu.
+    </p>
+
+    <ul class="checklist" style="margin-bottom:2rem">
+      <li>
+        <span class="ci">✅</span>
+        <span class="ct"><strong>Amy</strong> — Backend Node.js hoàn chỉnh, đã merge PR #1. Không cần làm thêm về code.</span>
+      </li>
+      <li>
+        <span class="ci">✅</span>
+        <span class="ct"><strong>Noah</strong> — Skill i18n-ui tốt, đã merge PR #2.
+        <span class="badge badge-needs-work" style="margin-left:0.5rem">Việc nhỏ: di chuyển vào .codex/skills/</span></span>
+      </li>
+      <li>
+        <span class="ci">✅</span>
+        <span class="ct"><strong>Michael</strong> — Tài liệu API đã merge PR #3.
+        <span class="badge badge-needs-work" style="margin-left:0.5rem">Nên tạo thành SKILL.md</span></span>
+      </li>
+      <li>
+        <span class="ci">⚠️</span>
+        <span class="ct"><strong>Eddie</strong> — Skills tốt nhưng sai thư mục.
+        <span class="badge badge-open" style="margin-left:0.5rem">Cần sửa path → .codex/skills/</span></span>
+      </li>
+      <li>
+        <span class="ci">⚠️</span>
+        <span class="ct"><strong>Nikolas</strong> — Đã merge nhưng chưa có nội dung thực.
+        <span class="badge badge-open" style="margin-left:0.5rem">Cần tạo Skill mới</span></span>
+      </li>
+      <li>
+        <span class="ci">🚨</span>
+        <span class="ct"><strong>Veronica</strong> — Branch chưa được merge.
+        <span class="badge badge-open" style="margin-left:0.5rem">Cần tạo Pull Request ngay</span></span>
+      </li>
+    </ul>
+
+    <!-- GOAL STATE -->
+    <div class="guide-box">
+      <h3>🎯 Cấu trúc lý tưởng sau khi hoàn thiện</h3>
+      <div class="code-block">Tekazure-imageAI/
+├── <span class="c-path">.codex/skills/</span>              <span class="c-comment"># ← Tất cả skills vào đây!</span>
+│   ├── <span class="c-good">code-review/</span>             <span class="c-comment"># Eddie (cần di chuyển)</span>
+│   │   └── SKILL.md
+│   ├── <span class="c-good">security-review/</span>         <span class="c-comment"># Eddie (cần di chuyển)</span>
+│   │   └── SKILL.md
+│   ├── <span class="c-good">i18n-ui/</span>                 <span class="c-comment"># Noah (cần di chuyển)</span>
+│   │   ├── SKILL.md
+│   │   └── references/
+│   ├── <span class="c-val">gpt-image-api/</span>           <span class="c-comment"># Michael (cần tạo từ tài liệu)</span>
+│   │   └── SKILL.md
+│   ├── <span class="c-val">gpt-image-2-guide/</span>       <span class="c-comment"># Veronica (cần tạo từ .docx)</span>
+│   │   └── SKILL.md
+│   └── <span class="c-val">nikolas-seo/</span>             <span class="c-comment"># Nikolas (cần tạo mới)</span>
+│       └── SKILL.md
+├── <span class="c-path">docs/</span>                        <span class="c-comment"># Tài liệu tham khảo</span>
+│   ├── git-guide.md             <span class="c-comment"># Veronica (từ .docx)</span>
+│   └── gpt-image-research/
+└── <span class="c-path">src/</span>                         <span class="c-comment"># Backend code của Amy</span>
+    └── ...</div>
+    </div>
+
+    <div class="callout callout-success" style="margin-top:1.5rem">
+      <div class="callout-icon">🎉</div>
+      <div class="callout-body">
+        <strong>Team đang đi đúng hướng!</strong>
+        Đây là project đầu tiên và mọi người đều đã có commits thực sự. Chỉ cần 3 bước nhỏ:
+        (1) Veronica tạo PR, (2) Eddie sửa path, (3) mọi người di chuyển skills vào <code>.codex/skills/</code>
+        — repo sẽ hoàn chỉnh.
+      </div>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<footer>
+  <div style="margin-bottom:0.5rem">
+    <strong style="color:var(--text-bright)">Tekazure-imageAI</strong> — Repository Status Report
+  </div>
+  <div>Generated: 05 May 2026 &nbsp;|&nbsp; Branch: main &nbsp;|&nbsp;
+    Contributors: Amy · Noah · Michael · Eddie · Nikolas · Veronica
+  </div>
+</footer>
+
+<a href="#hero" class="scroll-top" title="Lên đầu">↑</a>
+
+<script>
+  // Active nav link on scroll
+  const sections = document.querySelectorAll('section[id]');
+  const navLinks = document.querySelectorAll('nav .nav-links a');
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        navLinks.forEach(a => a.classList.remove('active'));
+        const active = document.querySelector(`nav a[href="#${e.target.id}"]`);
+        if (active) active.classList.add('active');
+      }
+    });
+  }, { threshold: 0.3 });
+  sections.forEach(s => observer.observe(s));
+</script>
+
+</body>
+</html>
