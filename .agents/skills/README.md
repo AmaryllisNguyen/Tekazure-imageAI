@@ -25,3 +25,10 @@ This repository stores project-specific skills under `.agents/skills`.
 - Validate with:
   - `rg --files .agents/skills`
   - `rg "references/|scripts/|assets/" .agents/skills -n`
+
+## Merge Gate Policy
+- All skill changes targeting `main` must pass the `skill-validation` GitHub Action.
+- PRs that fail skill validation are rejected by required status checks.
+- Before opening a PR, run:
+  - `npm run validate:skills` (full repo audit)
+  - `npm run validate:skills:changed` (quick changed-scope check)
