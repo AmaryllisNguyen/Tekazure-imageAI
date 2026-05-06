@@ -7,6 +7,13 @@ const ROOT = process.cwd();
 const SKILLS_ROOT = '.agents/skills';
 const ALLOWED_SKILL_TOP_LEVEL = new Set(['SKILL.md', 'references', 'scripts', 'assets', 'agents']);
 const LEGACY_ROOT_DOCS = new Set(['Code-review.md', 'Security-review.md']);
+const ROOT_ARTIFACT_RE = [
+  /status.*\.html$/i,
+  /\.log$/i,
+  /\.tmp$/i,
+  /\.bak$/i,
+];
+const REF_TEST_TXT_RE = /^ref\/.*(?:\/|^)[^/]*test[^/]*\.txt$/i;
 
 function parseArgs(argv) {
   const args = { changedOnly: false, all: false, base: null, head: null };
@@ -62,7 +69,12 @@ function listSkillDirsAll() {
 }
 
 function changedFiles(base, head) {
-  const out = run(`git diff --name-only --diff-filter=ACMR ${base}...${head}`);
+  const out = run(`git diff --name-only --diff-filter=ACMRT ${base}...${head}`);
+  return out ? out.split('\n').map((s) => s.trim()).filter(Boolean) : [];
+}
+
+function allTrackedFiles() {
+  const out = run('git ls-files');
   return out ? out.split('\n').map((s) => s.trim()).filter(Boolean) : [];
 }
 
@@ -96,6 +108,30 @@ function validateLegacyDocs(errors, scope, base, head) {
   for (const f of files) {
     if (LEGACY_ROOT_DOCS.has(f)) {
       errors.push(`[ERROR] ${f}: legacy root-level skill doc changed. Use .agents/skills/<skill>/SKILL.md.`);
+    }
+  }
+}
+
+function isRootArtifact(p) {
+  if (!p || p.includes('/')) return false;
+  return ROOT_ARTIFACT_RE.some((re) => re.test(p));
+}
+
+function isRefTestArtifact(p) {
+  const normalized = (p || '').replace(/\\/g, '/');
+  if (!REF_TEST_TXT_RE.test(normalized)) return false;
+  if (normalized === 'ref/Nikolas/NikolasTest.txt') return false; // legacy baseline file on main
+  return true;
+}
+
+function validateArtifactPolicy(errors, scope, base, head) {
+  const files = scope === 'all' ? allTrackedFiles() : changedFiles(base, head);
+  for (const f of files) {
+    if (isRootArtifact(f)) {
+      errors.push(`[ERROR] ${f}: root artifact file is not allowed by policy (status html/log/tmp/bak).`);
+    }
+    if (isRefTestArtifact(f)) {
+      errors.push(`[ERROR] ${f}: test artifact under ref/ is not allowed (*Test*.txt).`);
     }
   }
 }
@@ -154,12 +190,14 @@ function main() {
     try {
       dirs = listSkillDirsChanged(base, head).filter((d) => d !== '__LEGACY_DOC__');
       validateLegacyDocs(errors, scope, base, head);
+      validateArtifactPolicy(errors, scope, base, head);
     } catch (e) {
       errors.push(`[ERROR] git diff failed for range ${base}...${head}: ${e.message}`);
     }
   } else {
     dirs = listSkillDirsAll();
     validateLegacyDocs(errors, scope);
+    validateArtifactPolicy(errors, scope);
   }
 
   for (const d of dirs) {
@@ -194,6 +232,7 @@ function main() {
   console.log('1. Ensure each skill is under .agents/skills/<skill-name>/ with SKILL.md (uppercase).');
   console.log('2. Add valid YAML frontmatter in SKILL.md with non-empty name and description.');
   console.log('3. Keep only allowed top-level entries: SKILL.md, references/, scripts/, assets/, agents/.');
+  console.log('4. Remove blocked artifacts from root/ref (status html, *.log, *.tmp, *.bak, ref/*Test*.txt).');
   process.exit(1);
 }
 

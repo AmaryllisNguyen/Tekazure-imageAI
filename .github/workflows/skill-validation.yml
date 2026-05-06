@@ -4,10 +4,6 @@ on:
   pull_request:
     branches:
       - main
-    paths:
-      - '.agents/skills/**'
-      - 'scripts/validate-skills.mjs'
-      - '.github/workflows/skill-validation.yml'
 
 jobs:
   validate-skills:

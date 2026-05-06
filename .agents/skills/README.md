@@ -29,6 +29,9 @@ This repository stores project-specific skills under `.agents/skills`.
 ## Merge Gate Policy
 - All skill changes targeting `main` must pass the `skill-validation` GitHub Action.
 - PRs that fail skill validation are rejected by required status checks.
+- Artifact policy also fails PRs when blocked local artifacts are added:
+  - Root: `*status*.html`, `*.log`, `*.tmp`, `*.bak`
+  - Under `ref/`: `*Test*.txt`
 - Before opening a PR, run:
   - `npm run validate:skills` (full repo audit)
   - `npm run validate:skills:changed` (quick changed-scope check)
