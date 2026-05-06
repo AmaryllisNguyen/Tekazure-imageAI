@@ -120,7 +120,6 @@ function isRootArtifact(p) {
 function isRefTestArtifact(p) {
   const normalized = (p || '').replace(/\\/g, '/');
   if (!REF_TEST_TXT_RE.test(normalized)) return false;
-  if (normalized === 'ref/Nikolas/NikolasTest.txt') return false; // legacy baseline file on main
   return true;
 }
 
