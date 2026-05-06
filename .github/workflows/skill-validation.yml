@@ -1,0 +1,31 @@
+name: skill-validation
+
+on:
+  pull_request:
+    branches:
+      - main
+    paths:
+      - '.agents/skills/**'
+      - 'scripts/validate-skills.mjs'
+      - '.github/workflows/skill-validation.yml'
+
+jobs:
+  validate-skills:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Validate changed skills
+        env:
+          GITHUB_BASE_SHA: ${{ github.event.pull_request.base.sha }}
+          GITHUB_HEAD_SHA: ${{ github.event.pull_request.head.sha }}
+        run: |
+          node scripts/validate-skills.mjs --changed-only --base "$GITHUB_BASE_SHA" --head "$GITHUB_HEAD_SHA"

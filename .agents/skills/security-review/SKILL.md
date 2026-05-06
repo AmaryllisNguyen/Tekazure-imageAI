@@ -1,7 +1,3 @@
-
-## 2) Security Review Skill
-
-```md
 ---
 name: security-review
 description: Use this skill when asked to perform a security review, audit code, review authentication, authorization, user input handling, secrets, cryptography, file handling, API security, or vulnerability risks.
@@ -89,3 +85,4 @@ Brief overall risk assessment.
 ## Security Tests Recommended
 
 ## Positive Notes
+```
