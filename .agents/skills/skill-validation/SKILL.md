@@ -29,6 +29,8 @@ A valid skill must:
 ## Repository Gate Rules
 - Reject lowercase `skill.md`.
 - Reject root-level legacy skill docs (`Code-review.md`, `Security-review.md`).
+- Reject root artifact files matching `*status*.html`, `*.log`, `*.tmp`, `*.bak`.
+- Reject test artifact files under `ref/` matching `*Test*.txt`.
 - If any changed skill violates the rules, validation result is `FAIL`.
 
 ## Output Format
