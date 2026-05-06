@@ -1,0 +1,4 @@
+# Skills governance owners
+/.agents/skills/** @AmaryllisNguyen
+/scripts/validate-skills.mjs @AmaryllisNguyen
+/.github/workflows/skill-validation.yml @AmaryllisNguyen
