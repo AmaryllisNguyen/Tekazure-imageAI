@@ -1,4 +1,4 @@
 interface:
   display_name: "Vibe Brainstorm"
   short_description: "Shape rough ideas into buildable MVPs"
-  default_prompt: "Use $vibe-brainstorm to turn this rough idea into a clear MVP and a handoff prompt for implementation."
+  default_prompt: "Use $vibe-brainstorm-veron to turn this rough idea into a clear MVP and a handoff prompt for implementation."

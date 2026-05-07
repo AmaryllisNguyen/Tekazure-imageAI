@@ -1,5 +1,5 @@
 ---
-name: vibe-brainstorm
+name: vibe-brainstorm-veron
 description: Structured idea framing and MVP shaping for vague product, automation, app, refactor, or coding concepts. Use when the user wants to brainstorm an idea, compare build directions, narrow scope, define an MVP, surface trade-offs, or generate the next build prompt before implementation.
 ---
 
