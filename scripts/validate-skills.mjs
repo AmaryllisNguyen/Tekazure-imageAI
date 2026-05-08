@@ -41,10 +41,10 @@ function isKebabCase(name) {
 }
 
 function parseFrontmatter(raw) {
-  if (!raw.startsWith('---\n')) return { ok: false, reason: 'SKILL.md must start with YAML frontmatter (---).' };
-  const end = raw.indexOf('\n---\n', 4);
-  if (end === -1) return { ok: false, reason: 'Frontmatter must end with closing --- line.' };
-  const body = raw.slice(4, end).split('\n');
+  const normalized = raw.replace(/^\uFEFF/, '');
+  const match = normalized.match(/^---\r?\n([\s\S]*?)\r?\n---\r?\n?/);
+  if (!match) return { ok: false, reason: 'SKILL.md must start with YAML frontmatter (---).' };
+  const body = match[1].split(/\r?\n/);
   const map = new Map();
   for (const line of body) {
     const idx = line.indexOf(':');
@@ -138,13 +138,14 @@ function validateArtifactPolicy(errors, scope, base, head) {
 function validateSkillDir(relDir, errors) {
   const folder = path.posix.basename(relDir);
   const absDir = path.join(ROOT, relDir);
+  const entries = fs.readdirSync(absDir, { withFileTypes: true });
+  const entryNames = new Set(entries.map((e) => e.name));
 
   if (!isKebabCase(folder)) {
     errors.push(`[ERROR] ${relDir}: skill folder name must be kebab-case.`);
   }
 
-  const lowerSkill = path.join(absDir, 'skill.md');
-  if (fs.existsSync(lowerSkill)) {
+  if (entryNames.has('skill.md')) {
     errors.push(`[ERROR] ${relDir}/skill.md: lowercase file is forbidden. Use SKILL.md.`);
   }
 
@@ -162,7 +163,6 @@ function validateSkillDir(relDir, errors) {
     errors.push(`[ERROR] ${relDir}/SKILL.md: frontmatter name='${fm.name}' must match folder '${folder}'.`);
   }
 
-  const entries = fs.readdirSync(absDir, { withFileTypes: true });
   for (const e of entries) {
     if (!ALLOWED_SKILL_TOP_LEVEL.has(e.name)) {
       errors.push(`[ERROR] ${relDir}/${e.name}: unsupported top-level entry. Allowed: SKILL.md, references/, scripts/, assets/, agents/.`);

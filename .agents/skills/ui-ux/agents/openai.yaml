@@ -1,0 +1,4 @@
+﻿interface:
+  display_name: "UI UX Designer"
+  short_description: "Design polished, conversion-focused, and accessible product interfaces"
+  default_prompt: "Use $ui-ux to define the UI UX direction, pick a visual system, and deliver a production-ready implementation plan with responsive and accessibility requirements."
