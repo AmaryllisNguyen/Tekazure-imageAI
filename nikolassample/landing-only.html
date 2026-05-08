@@ -1,0 +1,164 @@
+﻿<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>TekAzure ImageAI - Landing Only</title>
+  <style>
+    :root {
+      --bg: #08101f;
+      --surface: #121d38;
+      --surface2: #182548;
+      --text: #edf2ff;
+      --muted: #aab7db;
+      --line: #2a3c6d;
+      --primary: #2bd1a5;
+      --accent: #4fa3ff;
+      --radius: 16px;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: "Segoe UI", Tahoma, sans-serif;
+      color: var(--text);
+      background:
+        radial-gradient(1000px 500px at 0% -20%, #24386f 0%, transparent 60%),
+        radial-gradient(800px 450px at 100% -30%, #17414e 0%, transparent 64%),
+        var(--bg);
+    }
+    .container { width: min(1160px, 92vw); margin: 0 auto; }
+    .nav {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 16px 0;
+      position: sticky; top: 0;
+      background: rgba(8,16,31,.85); backdrop-filter: blur(8px);
+      z-index: 10;
+    }
+    .brand { font-weight: 700; letter-spacing: .2px; display:flex; align-items:center; gap:10px; }
+    .dot { width: 10px; height: 10px; border-radius: 999px; background: linear-gradient(135deg,var(--primary),var(--accent)); }
+    .nav-actions { display:flex; gap:10px; }
+    button {
+      border: 1px solid var(--line); border-radius: 999px; padding: 10px 16px;
+      background: transparent; color: var(--text); cursor: pointer; font-weight: 600;
+    }
+    .btn-primary { border: 0; background: linear-gradient(135deg,var(--primary),#1ebc92); color: #03241c; }
+    .hero {
+      display: grid; grid-template-columns: 1.1fr .9fr; gap: 22px; align-items: center;
+      padding: 54px 0 28px;
+    }
+    h1 { font-size: clamp(32px, 5vw, 62px); margin: 0 0 14px; line-height: 1.02; letter-spacing:-1.2px; }
+    .sub { color: var(--muted); line-height: 1.6; margin: 0 0 20px; max-width: 56ch; }
+    .cta { display:flex; flex-wrap:wrap; gap:10px; margin-bottom: 16px; }
+    .meta { display:flex; flex-wrap: wrap; gap:8px; }
+    .pill { border:1px solid var(--line); border-radius:999px; padding:6px 10px; color:var(--muted); font-size: 12px; }
+    .preview {
+      border:1px solid rgba(255,255,255,.12); border-radius: var(--radius);
+      background: linear-gradient(180deg, rgba(95,123,205,.2), rgba(18,28,54,.75));
+      padding: 14px;
+    }
+    .mock {
+      height: 300px; border-radius: 12px; border:1px solid #38508d;
+      background:
+        linear-gradient(35deg, rgba(15,27,54,.85), rgba(28,47,83,.7)),
+        linear-gradient(120deg,#9da7ba,#6d7ea4);
+      position: relative; overflow: hidden;
+    }
+    .mock::after {
+      content: "Before / After Preview";
+      position: absolute; left: 10px; bottom: 10px;
+      font-size: 12px; color: #dae5ff;
+      border:1px solid rgba(255,255,255,.2); border-radius:999px; padding:4px 8px;
+      background: rgba(11,17,35,.6);
+    }
+    .section { padding: 14px 0 42px; }
+    .grid { display:grid; gap:12px; grid-template-columns: repeat(4, 1fr); }
+    .card {
+      border:1px solid var(--line); background: var(--surface);
+      border-radius: 14px; padding: 14px;
+    }
+    .card h3 { margin: 0 0 8px; font-size: 16px; }
+    .card p { margin: 0; color: var(--muted); font-size: 14px; line-height: 1.5; }
+    .workflow {
+      margin-top: 16px;
+      border:1px solid var(--line); border-radius: 14px;
+      background: var(--surface2);
+      padding: 14px;
+      display:grid; grid-template-columns: repeat(5, 1fr); gap: 8px;
+    }
+    .step { border:1px solid #38508d; border-radius: 12px; padding: 10px; font-size: 13px; color:#dfe8ff; text-align:center; }
+    .footer-cta {
+      margin: 20px 0 46px;
+      border:1px solid var(--line); border-radius: 16px;
+      background: linear-gradient(135deg, rgba(43,209,165,.12), rgba(79,163,255,.12));
+      padding: 22px;
+      display:flex; align-items:center; justify-content: space-between; gap: 10px;
+    }
+    .footer-cta p { margin: 0; color: var(--muted); }
+    @media (max-width: 980px) {
+      .hero { grid-template-columns: 1fr; }
+      .grid { grid-template-columns: 1fr 1fr; }
+      .workflow { grid-template-columns: 1fr 1fr; }
+    }
+    @media (max-width: 640px) {
+      .grid { grid-template-columns: 1fr; }
+      .workflow { grid-template-columns: 1fr; }
+      .footer-cta { flex-direction: column; align-items: flex-start; }
+    }
+  </style>
+</head>
+<body>
+  <div class="container nav">
+    <div class="brand"><span class="dot"></span>TekAzure ImageAI</div>
+    <div class="nav-actions">
+      <button type="button">View Demo</button>
+      <button class="btn-primary" type="button">Start Processing</button>
+    </div>
+  </div>
+
+  <main class="container">
+    <section class="hero">
+      <div>
+        <h1>Your image pipeline, upgraded with GPT-powered precision.</h1>
+        <p class="sub">Upload, prompt, compare, and export in one workspace. Built for teams that need quality output, consistent style, and fast delivery.</p>
+        <div class="cta">
+          <button class="btn-primary" type="button">Try Studio</button>
+          <button type="button">See Live Demo</button>
+        </div>
+        <div class="meta">
+          <span class="pill">Model profiles 1.5 / 2.0</span>
+          <span class="pill">Safe error responses</span>
+          <span class="pill">Version history built-in</span>
+        </div>
+      </div>
+      <aside class="preview">
+        <div class="mock" aria-label="preview mock"></div>
+      </aside>
+    </section>
+
+    <section class="section">
+      <div class="grid">
+        <article class="card"><h3>Generate</h3><p>Create campaign visuals from clear prompts with quality presets.</p></article>
+        <article class="card"><h3>Edit</h3><p>Keep logo and texture fidelity while changing backgrounds and lighting.</p></article>
+        <article class="card"><h3>Compare</h3><p>Review before/after outputs with version-by-version confidence.</p></article>
+        <article class="card"><h3>Export</h3><p>Deliver PNG/JPEG/WEBP assets directly to marketing and product teams.</p></article>
+      </div>
+
+      <div class="workflow" aria-label="workflow steps">
+        <div class="step">1. Upload</div>
+        <div class="step">2. Prompt</div>
+        <div class="step">3. Generate</div>
+        <div class="step">4. Review</div>
+        <div class="step">5. Export</div>
+      </div>
+    </section>
+
+    <section class="footer-cta">
+      <div>
+        <strong>Ready to modernize your image workflow?</strong>
+        <p>Start with a small pilot and scale when the team is ready.</p>
+      </div>
+      <button class="btn-primary" type="button">Start Processing</button>
+    </section>
+  </main>
+</body>
+</html>

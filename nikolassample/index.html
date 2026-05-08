@@ -1,0 +1,553 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>TekAzure ImageAI - UI Mock</title>
+  <style>
+    :root {
+      --bg: #0a1020;
+      --bg-soft: #121a31;
+      --surface: #161f3d;
+      --surface-2: #1d274a;
+      --line: #2c3a66;
+      --text: #ecf1ff;
+      --muted: #a6b3d8;
+      --primary: #2bd1a5;
+      --accent: #53a2ff;
+      --danger: #ff6c7f;
+      --radius: 16px;
+      --radius-sm: 10px;
+      --shadow: 0 18px 50px rgba(0, 0, 0, 0.35);
+    }
+
+    * { box-sizing: border-box; }
+    html, body { margin: 0; padding: 0; }
+    body {
+      font-family: "Segoe UI", Tahoma, sans-serif;
+      color: var(--text);
+      background:
+        radial-gradient(1100px 500px at 10% -10%, #22376f 0%, transparent 60%),
+        radial-gradient(900px 450px at 100% -20%, #144353 0%, transparent 65%),
+        var(--bg);
+      min-height: 100vh;
+    }
+
+    .container {
+      width: min(1200px, 92vw);
+      margin: 0 auto;
+    }
+
+    .topbar {
+      position: sticky;
+      top: 0;
+      z-index: 20;
+      backdrop-filter: blur(6px);
+      background: rgba(10, 16, 32, 0.82);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    }
+
+    .topbar-inner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      padding: 14px 0;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-weight: 700;
+      letter-spacing: 0.2px;
+    }
+
+    .brand-dot {
+      width: 12px;
+      height: 12px;
+      border-radius: 99px;
+      background: linear-gradient(135deg, var(--primary), var(--accent));
+      box-shadow: 0 0 18px rgba(43, 209, 165, 0.5);
+    }
+
+    .pill {
+      border: 1px solid var(--line);
+      color: var(--muted);
+      background: rgba(255, 255, 255, 0.02);
+      border-radius: 999px;
+      padding: 7px 12px;
+      font-size: 12px;
+    }
+
+    .hero {
+      padding: 52px 0 26px;
+      display: grid;
+      grid-template-columns: 1.05fr 0.95fr;
+      gap: 22px;
+      align-items: stretch;
+    }
+
+    h1 {
+      font-size: clamp(30px, 4.6vw, 58px);
+      line-height: 1.02;
+      margin: 0 0 16px;
+      letter-spacing: -1.2px;
+    }
+
+    .sub {
+      color: var(--muted);
+      font-size: clamp(15px, 1.8vw, 18px);
+      margin: 0 0 24px;
+      max-width: 60ch;
+      line-height: 1.6;
+    }
+
+    .cta-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-bottom: 16px;
+    }
+
+    button {
+      border: 0;
+      border-radius: 999px;
+      padding: 11px 18px;
+      font-weight: 600;
+      font-size: 14px;
+      cursor: pointer;
+      transition: transform 0.15s ease, opacity 0.15s ease;
+    }
+    button:focus-visible, select:focus-visible, textarea:focus-visible, input:focus-visible {
+      outline: 2px solid var(--accent);
+      outline-offset: 2px;
+    }
+    button:hover { transform: translateY(-1px); }
+    .primary-btn {
+      background: linear-gradient(135deg, var(--primary), #23bd95);
+      color: #04281f;
+    }
+    .ghost-btn {
+      color: var(--text);
+      background: transparent;
+      border: 1px solid var(--line);
+    }
+
+    .trust-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .hero-card {
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: var(--radius);
+      background: linear-gradient(180deg, rgba(84, 117, 194, 0.16), rgba(17, 24, 44, 0.6));
+      box-shadow: var(--shadow);
+      padding: 14px;
+      display: grid;
+      gap: 10px;
+    }
+
+    .studio {
+      margin: 24px 0 48px;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: var(--radius);
+      overflow: hidden;
+      box-shadow: var(--shadow);
+      background: linear-gradient(180deg, #111936, #0f1730);
+    }
+
+    .studio-head {
+      padding: 12px 14px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+    }
+
+    .studio-grid {
+      display: grid;
+      grid-template-columns: 260px 1fr 320px;
+      min-height: 560px;
+    }
+
+    .panel {
+      padding: 14px;
+      border-right: 1px solid rgba(255, 255, 255, 0.08);
+      background: rgba(255, 255, 255, 0.01);
+    }
+
+    .panel h3 {
+      margin: 0 0 10px;
+      font-size: 13px;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    .dropzone {
+      border: 1px dashed #42558f;
+      border-radius: var(--radius-sm);
+      padding: 16px;
+      text-align: center;
+      color: var(--muted);
+      margin-bottom: 12px;
+    }
+
+    .asset-list, .history-list {
+      display: grid;
+      gap: 8px;
+      margin: 0;
+      padding: 0;
+      list-style: none;
+    }
+
+    .item {
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      padding: 8px 10px;
+      background: var(--surface-2);
+      font-size: 13px;
+      color: #dbe4ff;
+    }
+
+    .canvas-wrap {
+      position: relative;
+      padding: 16px;
+      display: grid;
+      align-content: start;
+      gap: 12px;
+      background: radial-gradient(circle at top right, rgba(86, 114, 196, 0.3), transparent 40%), #0c1329;
+    }
+
+    .statusbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+    }
+
+    .status {
+      font-size: 12px;
+      color: #d7e0ff;
+      border: 1px solid var(--line);
+      background: rgba(255, 255, 255, 0.02);
+      border-radius: 999px;
+      padding: 6px 10px;
+      min-width: 110px;
+      text-align: center;
+    }
+
+    .compare {
+      position: relative;
+      border-radius: var(--radius-sm);
+      overflow: hidden;
+      border: 1px solid #30457e;
+      height: 430px;
+      background: #0c1021;
+    }
+
+    .layer {
+      position: absolute;
+      inset: 0;
+      background-size: cover;
+      background-position: center;
+    }
+    .before {
+      background-image:
+        linear-gradient(35deg, rgba(26, 33, 58, 0.85), rgba(55, 67, 110, 0.65)),
+        linear-gradient(120deg, #9fa8bb, #6f7ea0);
+      filter: grayscale(0.25) contrast(0.9);
+    }
+    .after {
+      background-image:
+        linear-gradient(35deg, rgba(43, 78, 93, 0.45), rgba(37, 104, 89, 0.3)),
+        linear-gradient(120deg, #7eb8ff, #65d7be);
+      clip-path: inset(0 50% 0 0);
+    }
+
+    .divider {
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      left: 50%;
+      width: 2px;
+      background: #d9e7ff;
+      opacity: 0.9;
+    }
+
+    .tag {
+      position: absolute;
+      top: 10px;
+      font-size: 11px;
+      background: rgba(8, 12, 28, 0.75);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      border-radius: 999px;
+      padding: 4px 9px;
+    }
+    .tag.before-tag { left: 10px; }
+    .tag.after-tag { right: 10px; }
+
+    .slider {
+      width: 100%;
+      accent-color: var(--primary);
+    }
+
+    .controls {
+      padding: 14px;
+      display: grid;
+      gap: 12px;
+      background: #121b38;
+    }
+
+    label {
+      display: block;
+      font-size: 12px;
+      margin-bottom: 5px;
+      color: var(--muted);
+      letter-spacing: 0.3px;
+    }
+
+    textarea, select, .inline-input {
+      width: 100%;
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      background: var(--surface);
+      color: var(--text);
+      padding: 10px;
+      font: inherit;
+      font-size: 14px;
+    }
+
+    textarea { min-height: 116px; resize: vertical; }
+
+    .grid-2 {
+      display: grid;
+      gap: 8px;
+      grid-template-columns: 1fr 1fr;
+    }
+
+    .action-row {
+      display: flex;
+      gap: 8px;
+    }
+    .action-row button { flex: 1; }
+
+    .muted {
+      color: var(--muted);
+      font-size: 12px;
+      line-height: 1.5;
+      margin: 0;
+    }
+
+    .history {
+      margin-top: 10px;
+      border-top: 1px solid rgba(255, 255, 255, 0.08);
+      padding-top: 10px;
+    }
+
+    @media (max-width: 1040px) {
+      .hero { grid-template-columns: 1fr; }
+      .studio-grid { grid-template-columns: 240px 1fr; }
+      .controls { grid-column: 1 / -1; border-top: 1px solid rgba(255, 255, 255, 0.08); }
+    }
+    @media (max-width: 760px) {
+      .topbar-inner { padding: 10px 0; }
+      .studio-grid { grid-template-columns: 1fr; min-height: unset; }
+      .panel { border-right: 0; border-bottom: 1px solid rgba(255, 255, 255, 0.08); }
+      .compare { height: 300px; }
+      .action-row { flex-direction: column; }
+    }
+  </style>
+</head>
+<body>
+  <header class="topbar">
+    <div class="container topbar-inner">
+      <div class="brand">
+        <span class="brand-dot" aria-hidden="true"></span>
+        <span>TekAzure ImageAI</span>
+      </div>
+      <div class="pill">Model Profiles: 1.5 / 2.0</div>
+    </div>
+  </header>
+
+  <main class="container">
+    <section class="hero" aria-label="Product hero">
+      <div>
+        <h1>Transform product images in seconds with controlled AI edits.</h1>
+        <p class="sub">
+          Upload, prompt, compare, and export with full version history. Built for teams
+          that care about consistency, quality, and delivery speed.
+        </p>
+        <div class="cta-row">
+          <button class="primary-btn" type="button">Start Processing</button>
+          <button class="ghost-btn" type="button">See Live Demo</button>
+        </div>
+        <div class="trust-row">
+          <span class="pill">99.9% API uptime</span>
+          <span class="pill">p95 latency: 1.3s</span>
+          <span class="pill">Safe error responses</span>
+        </div>
+      </div>
+      <aside class="hero-card" aria-label="Workflow preview">
+        <div class="pill">Workflow</div>
+        <div class="item">1. Upload source image</div>
+        <div class="item">2. Prompt and select model profile</div>
+        <div class="item">3. Generate and compare output</div>
+        <div class="item">4. Export final image or branch version</div>
+      </aside>
+    </section>
+
+    <section class="studio" aria-label="Processing studio mock">
+      <div class="studio-head">
+        <strong>Processing Studio - Project: Summer Campaign</strong>
+        <span class="pill">Autosave: On</span>
+      </div>
+
+      <div class="studio-grid">
+        <aside class="panel" aria-label="Assets and versions">
+          <h3>Assets</h3>
+          <div class="dropzone">Drop image here or click upload</div>
+          <ul class="asset-list">
+            <li class="item">hero-shoe-v1.png</li>
+            <li class="item">hero-shoe-mask.png</li>
+          </ul>
+
+          <div class="history">
+            <h3>Version History</h3>
+            <ul class="history-list" id="historyList">
+              <li class="item">v3 - Color retouch</li>
+              <li class="item">v2 - Background swap</li>
+              <li class="item">v1 - Base upload</li>
+            </ul>
+          </div>
+        </aside>
+
+        <div class="canvas-wrap" aria-label="Image compare canvas">
+          <div class="statusbar">
+            <span class="pill">Compare mode</span>
+            <span class="status" id="jobStatus">Idle</span>
+          </div>
+          <div class="compare">
+            <div class="layer before"></div>
+            <div class="layer after" id="afterLayer"></div>
+            <div class="divider" id="divider"></div>
+            <span class="tag before-tag">Before</span>
+            <span class="tag after-tag">After</span>
+          </div>
+          <input class="slider" id="compareSlider" type="range" min="1" max="99" value="50" aria-label="Compare before and after">
+        </div>
+
+        <aside class="controls" aria-label="Prompt and generation settings">
+          <div>
+            <label for="prompt">Prompt</label>
+            <textarea id="prompt">Enhance product lighting, keep logo fidelity high, replace background with a premium studio gradient, and preserve shoe texture details.</textarea>
+          </div>
+
+          <div class="grid-2">
+            <div>
+              <label for="model">Model Profile</label>
+              <select id="model">
+                <option value="1.5">GPT Image 1.5 (stable)</option>
+                <option value="2">GPT Image 2 (latest quality)</option>
+              </select>
+            </div>
+            <div>
+              <label for="fidelity">Input Fidelity</label>
+              <select id="fidelity">
+                <option value="high">High</option>
+                <option value="low">Low</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="grid-2">
+            <div>
+              <label for="size">Output Size</label>
+              <select id="size">
+                <option>1024x1024</option>
+                <option>1024x1536</option>
+                <option>1536x1024</option>
+              </select>
+            </div>
+            <div>
+              <label for="format">Format</label>
+              <select id="format">
+                <option>PNG</option>
+                <option>JPEG</option>
+                <option>WEBP</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="action-row">
+            <button class="primary-btn" type="button" id="generateBtn">Generate</button>
+            <button class="ghost-btn" type="button" id="exportBtn">Export</button>
+          </div>
+          <p class="muted" id="hintText">
+            Advanced controls are intentionally limited in this mock for fast, beginner-friendly operation.
+          </p>
+        </aside>
+      </div>
+    </section>
+  </main>
+
+  <script>
+    (function () {
+      const slider = document.getElementById("compareSlider");
+      const afterLayer = document.getElementById("afterLayer");
+      const divider = document.getElementById("divider");
+      const status = document.getElementById("jobStatus");
+      const historyList = document.getElementById("historyList");
+      const generateBtn = document.getElementById("generateBtn");
+      const exportBtn = document.getElementById("exportBtn");
+      const model = document.getElementById("model");
+      const fidelity = document.getElementById("fidelity");
+      const hint = document.getElementById("hintText");
+
+      function setCompare(percent) {
+        afterLayer.style.clipPath = "inset(0 " + (100 - percent) + "% 0 0)";
+        divider.style.left = percent + "%";
+      }
+
+      slider.addEventListener("input", function () {
+        setCompare(Number(slider.value));
+      });
+      setCompare(50);
+
+      let version = 4;
+      let busy = false;
+
+      generateBtn.addEventListener("click", function () {
+        if (busy) return;
+        busy = true;
+        generateBtn.disabled = true;
+        status.textContent = "Processing...";
+        status.style.borderColor = "#3e77ff";
+        hint.textContent = "Running generation with profile " + model.value + " and fidelity " + fidelity.value + ".";
+
+        window.setTimeout(function () {
+          status.textContent = "Success";
+          status.style.borderColor = "#2bd1a5";
+          const item = document.createElement("li");
+          item.className = "item";
+          item.textContent = "v" + version + " - New output (" + model.value + ", " + fidelity.value + ")";
+          historyList.insertBefore(item, historyList.firstChild);
+          version += 1;
+          busy = false;
+          generateBtn.disabled = false;
+        }, 1400);
+      });
+
+      exportBtn.addEventListener("click", function () {
+        status.textContent = "Exported";
+        status.style.borderColor = "#2bd1a5";
+        hint.textContent = "Mock export complete. In real mode this will download imageBase64 output.";
+      });
+    })();
+  </script>
+</body>
+</html>

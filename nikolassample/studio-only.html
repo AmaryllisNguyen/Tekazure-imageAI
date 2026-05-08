@@ -1,0 +1,266 @@
+﻿<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>TekAzure ImageAI - Studio Only</title>
+  <style>
+    :root {
+      --bg: #0a1020;
+      --surface: #121a33;
+      --surface2: #192444;
+      --line: #2f406f;
+      --text: #edf2ff;
+      --muted: #a8b5db;
+      --primary: #2bd1a5;
+      --accent: #53a2ff;
+      --danger: #ff6e82;
+    }
+    * { box-sizing: border-box; }
+    body { margin: 0; font-family: "Segoe UI", Tahoma, sans-serif; color: var(--text);
+      background:
+        radial-gradient(1000px 400px at 8% -18%, #253b74 0%, transparent 60%),
+        radial-gradient(900px 450px at 100% -25%, #1b4c5e 0%, transparent 65%),
+        var(--bg);
+    }
+    .container { width: min(1220px, 94vw); margin: 0 auto; }
+    .head {
+      margin-top: 16px;
+      border: 1px solid rgba(255,255,255,.12);
+      border-radius: 14px 14px 0 0;
+      background: rgba(12,20,40,.75);
+      padding: 12px 14px;
+      display: flex; justify-content: space-between; align-items: center; gap: 8px;
+    }
+    .meta { color: var(--muted); font-size: 13px; }
+    .pill { border:1px solid var(--line); border-radius:999px; padding:6px 10px; font-size:12px; color:var(--muted); }
+    .studio {
+      border:1px solid rgba(255,255,255,.12);
+      border-top: 0;
+      border-radius: 0 0 14px 14px;
+      overflow: hidden;
+      display:grid; grid-template-columns: 250px 1fr 330px;
+      min-height: 660px;
+      margin-bottom: 24px;
+    }
+    .panel { background: rgba(255,255,255,.015); border-right: 1px solid rgba(255,255,255,.08); padding: 14px; }
+    .panel h3 { margin: 0 0 10px; color: var(--muted); font-size: 12px; text-transform: uppercase; letter-spacing: 1px; }
+    .drop { border:1px dashed #44609b; border-radius:10px; padding: 14px; text-align:center; color:var(--muted); margin-bottom: 10px; }
+    .list { list-style:none; padding:0; margin:0; display:grid; gap:8px; }
+    .item { border:1px solid var(--line); background: var(--surface2); border-radius:10px; padding:8px 10px; font-size: 13px; }
+
+    .main { padding: 14px; background: #0d152d; display:grid; gap: 10px; }
+    .status { display:flex; justify-content: space-between; align-items:center; gap:8px; }
+    .state { border:1px solid var(--line); padding:6px 10px; border-radius:999px; font-size:12px; min-width: 115px; text-align: center; }
+    .canvas {
+      position: relative; height: 500px; border-radius: 12px; overflow: hidden;
+      border:1px solid #33508b;
+      background: #0b1021;
+    }
+    .layer { position:absolute; inset:0; background-size: cover; background-position:center; }
+    .before {
+      background-image:
+        linear-gradient(30deg, rgba(15,25,50,.85), rgba(43,60,98,.65)),
+        linear-gradient(120deg,#9ca8bd,#7080a6);
+      filter: grayscale(.2);
+    }
+    .after {
+      background-image:
+        linear-gradient(30deg, rgba(26,79,88,.45), rgba(34,110,91,.35)),
+        linear-gradient(120deg,#7ebaff,#66d6c3);
+      clip-path: inset(0 45% 0 0);
+    }
+    .divider { position:absolute; top:0; bottom:0; left:55%; width:2px; background:#e5efff; }
+    .tag { position:absolute; top:10px; border:1px solid rgba(255,255,255,.18); background: rgba(8,12,27,.7); border-radius:999px; padding:4px 8px; font-size:11px; }
+    .tag:first-of-type { left:10px; }
+    .tag:last-of-type { right:10px; }
+    .range { width:100%; accent-color: var(--primary); }
+
+    .controls { background: var(--surface); padding: 14px; display:grid; gap: 12px; }
+    label { display:block; margin-bottom: 5px; color: var(--muted); font-size: 12px; }
+    textarea, select, input {
+      width:100%; border:1px solid var(--line); border-radius: 10px; padding: 10px;
+      background: var(--surface2); color: var(--text); font: inherit;
+    }
+    textarea { min-height: 120px; resize: vertical; }
+    .two { display:grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+    .actions { display:flex; gap: 8px; }
+    button {
+      flex: 1; border: 0; border-radius: 10px; padding: 11px 12px; font-weight: 600; cursor: pointer;
+    }
+    .primary { background: linear-gradient(135deg,var(--primary),#1cbc93); color:#04261f; }
+    .ghost { background: transparent; border:1px solid var(--line); color:var(--text); }
+    .note { color: var(--muted); font-size: 12px; line-height: 1.5; margin: 0; }
+
+    .log {
+      margin-bottom: 22px;
+      border:1px solid rgba(255,255,255,.1); border-radius: 12px;
+      background: rgba(255,255,255,.02); padding: 12px;
+      font-size: 13px; color: var(--muted);
+    }
+    @media (max-width: 1020px) {
+      .studio { grid-template-columns: 230px 1fr; }
+      .controls { grid-column: 1 / -1; border-top: 1px solid rgba(255,255,255,.08); }
+    }
+    @media (max-width: 760px) {
+      .studio { grid-template-columns: 1fr; }
+      .panel { border-right: 0; border-bottom: 1px solid rgba(255,255,255,.08); }
+      .canvas { height: 320px; }
+      .actions { flex-direction: column; }
+      .two { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+  <main class="container">
+    <header class="head">
+      <div>
+        <strong>TekAzure ImageAI Studio</strong>
+        <div class="meta">Project: Summer Campaign • Team Space A</div>
+      </div>
+      <span class="pill" id="topStatus">Idle</span>
+    </header>
+
+    <section class="studio" aria-label="studio mock">
+      <aside class="panel">
+        <h3>Assets</h3>
+        <div class="drop">Drop image or click upload</div>
+        <ul class="list">
+          <li class="item">shoe-v1.png</li>
+          <li class="item">shoe-mask.png</li>
+        </ul>
+
+        <h3 style="margin-top:14px;">Versions</h3>
+        <ul class="list" id="versions">
+          <li class="item">v3 - color pass</li>
+          <li class="item">v2 - bg update</li>
+          <li class="item">v1 - initial upload</li>
+        </ul>
+      </aside>
+
+      <section class="main">
+        <div class="status">
+          <span class="pill">Compare Mode</span>
+          <span class="state" id="state">Idle</span>
+        </div>
+
+        <div class="canvas">
+          <div class="layer before"></div>
+          <div class="layer after" id="after"></div>
+          <div class="divider" id="divider"></div>
+          <span class="tag">Before</span>
+          <span class="tag">After</span>
+        </div>
+        <input class="range" id="slider" type="range" min="1" max="99" value="55" aria-label="compare slider">
+      </section>
+
+      <aside class="controls">
+        <div>
+          <label for="prompt">Prompt</label>
+          <textarea id="prompt">Preserve product texture and logo. Add premium studio lighting, increase contrast, and apply a clean gradient background.</textarea>
+        </div>
+
+        <div class="two">
+          <div>
+            <label for="model">Model</label>
+            <select id="model">
+              <option value="1.5">GPT Image 1.5</option>
+              <option value="2">GPT Image 2</option>
+            </select>
+          </div>
+          <div>
+            <label for="fidelity">Fidelity</label>
+            <select id="fidelity">
+              <option>High</option>
+              <option>Low</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="two">
+          <div>
+            <label for="size">Size</label>
+            <select id="size">
+              <option>1024x1024</option>
+              <option>1024x1536</option>
+              <option>1536x1024</option>
+            </select>
+          </div>
+          <div>
+            <label for="format">Format</label>
+            <select id="format">
+              <option>PNG</option>
+              <option>JPEG</option>
+              <option>WEBP</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="actions">
+          <button class="primary" id="generate" type="button">Generate</button>
+          <button class="ghost" id="export" type="button">Export</button>
+        </div>
+        <p class="note" id="hint">Simple controls by default for beginner-friendly operation. Advanced settings can be added later.</p>
+      </aside>
+    </section>
+
+    <section class="log" id="log">System: Ready for generation.</section>
+  </main>
+
+  <script>
+    (function () {
+      const slider = document.getElementById('slider');
+      const after = document.getElementById('after');
+      const divider = document.getElementById('divider');
+      const state = document.getElementById('state');
+      const topStatus = document.getElementById('topStatus');
+      const log = document.getElementById('log');
+      const versions = document.getElementById('versions');
+      const generate = document.getElementById('generate');
+      const exportBtn = document.getElementById('export');
+      const model = document.getElementById('model');
+      const fidelity = document.getElementById('fidelity');
+      const hint = document.getElementById('hint');
+
+      function setSplit(v) {
+        after.style.clipPath = 'inset(0 ' + (100 - v) + '% 0 0)';
+        divider.style.left = v + '%';
+      }
+      slider.addEventListener('input', function () { setSplit(Number(slider.value)); });
+      setSplit(55);
+
+      let v = 4;
+      let locked = false;
+      generate.addEventListener('click', function () {
+        if (locked) return;
+        locked = true;
+        generate.disabled = true;
+        state.textContent = 'Processing...';
+        topStatus.textContent = 'Processing';
+        log.textContent = 'System: Generating output with model ' + model.value + ' and fidelity ' + fidelity.value + '.';
+        hint.textContent = 'Do not close the page while generating. You can cancel in a future version.';
+
+        setTimeout(function () {
+          state.textContent = 'Success';
+          topStatus.textContent = 'Success';
+          const li = document.createElement('li');
+          li.className = 'item';
+          li.textContent = 'v' + v + ' - generated (' + model.value + ', ' + fidelity.value + ')';
+          versions.insertBefore(li, versions.firstChild);
+          log.textContent = 'System: Output created successfully. Ready to export or iterate.';
+          hint.textContent = 'Tip: keep prompt and settings stable to preserve brand consistency.';
+          v += 1;
+          locked = false;
+          generate.disabled = false;
+        }, 1300);
+      });
+
+      exportBtn.addEventListener('click', function () {
+        state.textContent = 'Exported';
+        topStatus.textContent = 'Exported';
+        log.textContent = 'System: Mock export completed. Integrate with backend download endpoint next.';
+      });
+    })();
+  </script>
+</body>
+</html>
