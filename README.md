@@ -1,21 +1,21 @@
 # Azure OpenAI Image App (Mock-First)
 
-Ung dung Node.js nho gon de test endpoint tao anh voi 2 lua chon model:
+Lightweight Node.js app for image generation with two model options:
 - `model=1.5` -> deployment `DEPLOYMENT_GPT_IMAGE_15`
 - `model=2` -> deployment `DEPLOYMENT_GPT_IMAGE_2`
 
-Khi chua deploy duoc model image tren Azure, dat `MOCK_IMAGE_MODE=true` de test full luong API.
+If Azure image deployments are not ready yet, set `MOCK_IMAGE_MODE=true` for end-to-end API testing.
 
-## Run local
+## Run locally
 
-1. Tao file env:
+1. Create env file:
    - `cp .env.example .env`
-2. Chay server:
+2. Start the server:
    - `npm start`
 3. Health check:
    - `GET http://localhost:3000/health`
 
-## Test generate-image
+## Test `POST /generate-image`
 
 ```bash
 curl -s -X POST http://localhost:3000/generate-image \
@@ -23,37 +23,59 @@ curl -s -X POST http://localhost:3000/generate-image \
   -d '{"prompt":"A watercolor fox in a forest","model":"1.5"}'
 ```
 
-Response thanh cong:
-- `imageBase64`: base64 cua anh
-- `source`: `mock` hoac `azure`
-- `model`: `1.5` hoac `2`
+Successful response:
+- `imageBase64`: image bytes in base64
+- `source`: `mock` or `azure`
+- `model`: `1.5` or `2`
 
-## Azure mode
+## Configuration
 
-Dat trong `.env`:
-- `MOCK_IMAGE_MODE=false`
+Set these in `.env`:
+- `MOCK_IMAGE_MODE` (default: `true`)
 - `AZURE_OPENAI_ENDPOINT`
 - `AZURE_OPENAI_API_KEY`
 - `DEPLOYMENT_GPT_IMAGE_15`
 - `DEPLOYMENT_GPT_IMAGE_2`
-- `AZURE_OPENAI_API_VERSION` (mac dinh: `2025-04-01-preview`)
-- `AZURE_REQUEST_TIMEOUT_MS` (mac dinh: `15000`)
-- `MAX_BODY_BYTES` (mac dinh: `1048576`)
+- `AZURE_OPENAI_API_VERSION` (default: `2025-04-01-preview`)
+- `AZURE_REQUEST_TIMEOUT_MS` (default: `15000`)
+- `MAX_BODY_BYTES` (default: `1048576`)
+- `MAX_PROMPT_CHARS` (default: `4000`)
+- `RATE_LIMIT_WINDOW_MS` (default: `60000`)
+- `RATE_LIMIT_MAX_REQUESTS` (default: `60`)
 
-## Error contract (safe response)
+## API contract
 
-API `POST /generate-image` tra loi an toan theo ma:
-- `400`: request JSON sai format hoac input sai (`prompt`, `model`)
-- `413`: payload qua lon
-- `502`: loi hoac timeout tu Azure image provider
-- `500`: loi server noi bo
+Endpoint:
+- `POST /generate-image`
 
-Server log se giu chi tiet ky thuat (da redact thong tin nhay cam), client chi nhan message tong quat.
+Security behavior:
+- Requires `Content-Type: application/json`
+- Enforces server-side validation for `prompt` and `model`
+- Applies request body size limit and basic in-memory rate limiting
+- Uses safe error payloads and redacted internal logs
+
+Safe error status codes:
+- `400`: invalid JSON/content type/input
+- `405`: method not allowed
+- `413`: payload too large
+- `429`: too many requests
+- `502`: Azure provider timeout/network/upstream error
+- `500`: internal server error
+
+## Security compliance notes
+
+- No hardcoded secrets. Keep secrets in `.env` (local) or a secret manager (non-local).
+- Do not expose API keys or raw authorization headers in logs/responses.
+- Do not trust frontend validation; all inputs are validated again on the backend.
+- Middleware/policies currently cover:
+  - `/generate-image`: method guard, content-type guard, rate limit, body-size gate, schema validation
+  - `/health`: read-only endpoint
+- Database/RLS: not applicable in the current app because there is no database layer yet.
+- Dependency hygiene: run periodic dependency updates/audits as part of maintenance.
 
 ## Git safety
 
-- `RawDocuments/*` duoc ignore mac dinh, chi giu `RawDocuments/.gitkeep`.
-- Truoc moi lan push, chay:
+- `RawDocuments/*` is ignored by default, except `RawDocuments/.gitkeep`.
+- Before push, run:
   - `git status`
   - `git diff --staged`
-de dam bao khong lo du lieu nhay cam.
