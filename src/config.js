@@ -36,6 +36,9 @@ export function getConfig() {
     apiVersion: process.env.AZURE_OPENAI_API_VERSION || "2025-04-01-preview",
     mockMode: String(process.env.MOCK_IMAGE_MODE || "true").toLowerCase() === "true",
     azureRequestTimeoutMs: parseRequiredInt("AZURE_REQUEST_TIMEOUT_MS", 15000, 1000, 120000),
-    maxBodyBytes: parseRequiredInt("MAX_BODY_BYTES", 1048576, 1024, 10485760)
+    maxBodyBytes: parseRequiredInt("MAX_BODY_BYTES", 1048576, 1024, 10485760),
+    maxPromptChars: parseRequiredInt("MAX_PROMPT_CHARS", 4000, 1, 20000),
+    rateLimitWindowMs: parseRequiredInt("RATE_LIMIT_WINDOW_MS", 60000, 1000, 3600000),
+    rateLimitMaxRequests: parseRequiredInt("RATE_LIMIT_MAX_REQUESTS", 60, 1, 100000)
   };
 }
