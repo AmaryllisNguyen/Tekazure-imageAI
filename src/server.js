@@ -5,6 +5,22 @@ import { generateMockImage } from "./mockImageProvider.js";
 import { ApiError, createApiError } from "./errors.js";
 
 const RATE_LIMIT_STORE = new Map();
+const ALLOWED_ORIGINS = new Set([
+  "http://localhost:5173",
+  "http://127.0.0.1:5173",
+  "http://localhost:5174",
+  "http://127.0.0.1:5174"
+]);
+
+function applyCors(req, res) {
+  const origin = String(req.headers.origin || "");
+  if (ALLOWED_ORIGINS.has(origin)) {
+    res.setHeader("Access-Control-Allow-Origin", origin);
+    res.setHeader("Vary", "Origin");
+  }
+  res.setHeader("Access-Control-Allow-Methods", "GET,POST,OPTIONS");
+  res.setHeader("Access-Control-Allow-Headers", "Content-Type");
+}
 
 function sendJson(res, status, payload) {
   res.writeHead(status, {
@@ -146,6 +162,12 @@ function validateRequest(body, maxPromptChars) {
 
 const server = http.createServer(async (req, res) => {
   const cfg = getConfig();
+  applyCors(req, res);
+
+  if (req.method === "OPTIONS") {
+    res.writeHead(204);
+    return res.end();
+  }
 
   if (req.method === "GET" && req.url === "/health") {
     return sendJson(res, 200, { ok: true });

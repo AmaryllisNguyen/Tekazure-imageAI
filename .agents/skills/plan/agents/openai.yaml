@@ -1,0 +1,4 @@
+interface:
+  display_name: "Plan"
+  short_description: "Create specific phase-by-phase implementation plans"
+  default_prompt: "Use $plan to produce detailed phase plans under plans/ with concrete tasks, validations, and handoff."

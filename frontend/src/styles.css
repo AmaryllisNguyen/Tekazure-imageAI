@@ -1,0 +1,169 @@
+:root {
+  --bg: #101216;
+  --surface: #171a21;
+  --surface-elevated: #202430;
+  --text: #e9edf5;
+  --muted: #9aa5b5;
+  --accent: #19c37d;
+  --danger: #ff6b6b;
+  --border: #2b3140;
+  --radius: 12px;
+  --font-ui: "Soehne", "Helvetica Neue", Helvetica, Arial, sans-serif;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: var(--font-ui);
+  background: radial-gradient(circle at top, #1b2130, var(--bg) 45%);
+  color: var(--text);
+}
+
+#root {
+  min-height: 100vh;
+}
+
+.app-shell {
+  min-height: 100vh;
+  display: grid;
+  grid-template-rows: auto 1fr auto;
+}
+
+.app-header {
+  padding: 16px 20px;
+  border-bottom: 1px solid var(--border);
+  font-weight: 600;
+}
+
+.message-feed {
+  padding: 24px;
+  max-width: 900px;
+  width: 100%;
+  margin: 0 auto;
+  display: grid;
+  gap: 12px;
+  align-content: start;
+}
+
+.empty-state {
+  color: var(--muted);
+  text-align: center;
+  margin-top: 20vh;
+}
+
+.message {
+  border-radius: var(--radius);
+  padding: 14px;
+  border: 1px solid var(--border);
+}
+
+.message p {
+  margin: 0;
+  line-height: 1.45;
+}
+
+.message-user {
+  background: rgba(255, 255, 255, 0.04);
+}
+
+.message-assistant {
+  background: var(--surface);
+}
+
+.message img {
+  display: block;
+  width: min(100%, 640px);
+  margin-top: 10px;
+  border-radius: 10px;
+  border: 1px solid var(--border);
+}
+
+.composer-wrap {
+  position: sticky;
+  bottom: 0;
+  background: linear-gradient(180deg, rgba(16, 18, 22, 0.25), rgba(16, 18, 22, 0.95) 28%);
+  padding: 14px 16px 20px;
+}
+
+.error-banner {
+  max-width: 900px;
+  margin: 0 auto 10px;
+  background: rgba(255, 107, 107, 0.2);
+  color: #ffd9d9;
+  border: 1px solid rgba(255, 107, 107, 0.4);
+  border-radius: 10px;
+  padding: 10px 12px;
+}
+
+.composer {
+  max-width: 900px;
+  margin: 0 auto;
+  background: var(--surface-elevated);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 12px;
+  display: grid;
+  gap: 10px;
+}
+
+.composer-controls {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.composer label {
+  display: grid;
+  gap: 4px;
+  font-size: 13px;
+  color: var(--muted);
+}
+
+.composer select,
+.composer textarea,
+.composer button {
+  font: inherit;
+}
+
+.composer select,
+.composer textarea {
+  background: #12151c;
+  color: var(--text);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 8px 10px;
+}
+
+.composer textarea {
+  resize: vertical;
+  min-height: 86px;
+}
+
+.composer button {
+  justify-self: end;
+  border: 0;
+  border-radius: 10px;
+  padding: 10px 16px;
+  background: var(--accent);
+  color: #03150d;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.composer button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+@media (max-width: 768px) {
+  .message-feed {
+    padding: 16px;
+  }
+
+  .composer-wrap {
+    padding: 10px 12px 14px;
+  }
+}

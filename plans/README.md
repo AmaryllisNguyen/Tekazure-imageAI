@@ -23,7 +23,7 @@
 ## Phase Status Table
 | Phase | Goal | Status | Owner | Start Gate | Exit Gate |
 |---|---|---|---|---|---|
-| Phase 1 | Scaffold frontend and lock API contract | Planned | Frontend Engineer | Repo ready | Local UI sends valid request and renders response |
+| Phase 1 | Scaffold frontend and lock API contract | Blocked | Frontend Engineer | Repo ready | Local UI sends valid request and renders response |
 | Phase 2 | Complete UX flow and option controls | Planned | Frontend Engineer | Phase 1 done | End-to-end happy path + error/retry path pass |
 | Phase 3 | Harden reliability/release readiness | Planned | Frontend + QA | Phase 2 done | Accessibility, perf, and release checklist pass |
 
